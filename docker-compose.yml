@@ -1,0 +1,27 @@
+# docker-compose.yml — the Android emulator + Appium, in a container.
+# This is what makes the lab "easy": nobody installs the Android SDK. One host
+# (yours, or each Linux laptop) runs this; everyone points WDIO at port 4723.
+#
+#   docker compose up -d
+#   open http://localhost:6080     # watch the emulator live (noVNC)
+#   APPIUM_HOST=127.0.0.1 npm run android
+#
+# Requires an x86_64 host with KVM. This image is amd64-only and CANNOT run on
+# Apple Silicon (M-series) Macs — use MAC-EMULATOR.md there instead.
+services:
+  android:
+    image: budtmo/docker-android:emulator_11.0
+    privileged: true
+    ports:
+      - "6080:6080"   # noVNC — watch the emulator in a browser
+      - "4723:4723"   # Appium — WDIO connects here
+      - "5554:5554"
+      - "5555:5555"
+    devices:
+      - /dev/kvm:/dev/kvm
+    environment:
+      - EMULATOR_DEVICE=Samsung Galaxy S10
+      - WEB_VNC=true
+      - APPIUM=true
+    # Give the emulator room; it is heavy.
+    shm_size: "2gb"
