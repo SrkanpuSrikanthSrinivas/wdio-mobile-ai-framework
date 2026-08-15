@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "GymProgress",
+    "slug": "gymprogress",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "com.aiqeacademy.gymprogress",
+      "adaptiveIcon": {
+        "backgroundColor": "#0f172a",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "78cb3c6c-51ad-4a43-be01-759b90d2615d"
+      }
+    }
+  }
+}
