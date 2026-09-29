@@ -3,6 +3,13 @@ import Screen from './screen.js';
 /**
  * login.screen.js — the Login tab of the WDIO native demo app (see APP-MAP.md).
  * Accessibility ids are the app's own, taken from the WebdriverIO demo app.
+ *
+ * NOTE: All selectors must match the identifiers listed in APP-MAP.md.
+ * The previous version used a guessed lower‑case selector (`~button-login`);
+ * that selector does not exist in the official map, causing the
+ * `LOCATOR/STYLE ERROR` during validation. The correct selector, as defined
+ * in APP-MAP.md, is `~button-LOGIN` (upper‑case). The fallback selector has
+ * been removed to enforce strict compliance with the conventions.
  */
 
 const SELECTORS = {
@@ -11,10 +18,9 @@ const SELECTORS = {
   email: '~input-email',
   password: '~input-password',
   repeatPassword: '~input-repeat-password',
-  // Updated selector to match the actual element id (lower‑case).
-  loginButton: '~button-login',
-  // Keep the original selector as a fallback in case the app uses the upper‑case version.
-  loginButtonAlt: '~button-LOGIN',
+  // Updated to the exact selector from APP-MAP.md.
+  loginButton: '~button-LOGIN',
+  // Keep the original selector for the sign‑up button as defined in the app.
   signupButton: '~button-SIGN UP',
 };
 
@@ -35,15 +41,12 @@ class LoginScreen extends Screen {
 
   async switchToLogin() {
     await (await $(SELECTORS.loginContainerBtn)).click();
-    // Wait for either the primary or fallback login button to appear.
+    // Wait for the (correct) login button to appear.
     await this.waitFor(
       SELECTORS.loginButton,
       20000,
       `Login button (${SELECTORS.loginButton}) not displayed`
-    ).catch(async () => {
-      // If the primary selector fails, try the alternative.
-      await this.waitFor(SELECTORS.loginButtonAlt, 20000);
-    });
+    );
   }
 
   async switchToSignup() {
@@ -58,7 +61,7 @@ class LoginScreen extends Screen {
     await (await $(SELECTORS.loginButton)).click();
   }
 
-  /** Fill the sign-up form and submit. Call switchToSignup() first. */
+  /** Fill the sign‑up form and submit. Call switchToSignup() first. */
   async signup({ email, password, repeatPassword = password }) {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
@@ -67,7 +70,7 @@ class LoginScreen extends Screen {
   }
 
   /**
-   * The on-screen validation text, e.g. MESSAGES.invalidEmail.
+   * The on‑screen validation text, e.g. MESSAGES.invalidEmail.
    * The app gives these no accessibility id, so they are found by exact text.
    */
   validationMessage(text) {
