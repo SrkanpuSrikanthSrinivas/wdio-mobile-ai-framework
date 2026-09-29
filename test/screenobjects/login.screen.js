@@ -1,7 +1,7 @@
 import Screen from './screen.js';
 
 /**
- * login.screen.js — the Login tab of the WDIO native demo app.
+ * login.screen.js — the Login tab of the WDIO native demo app (see APP-MAP.md).
  * Accessibility ids are the app's own, taken from the WebdriverIO demo app.
  */
 
@@ -13,6 +13,15 @@ const SELECTORS = {
   repeatPassword: '~input-repeat-password',
   loginButton: '~button-LOGIN',
   signupButton: '~button-SIGN UP',
+};
+
+/** Exact texts the app shows (APP-MAP.md). Assert on these, not on guesses. */
+const MESSAGES = {
+  loginSuccess: 'You are logged in!',
+  signupSuccess: 'You successfully signed up!',
+  invalidEmail: 'Please enter a valid email address',
+  shortPassword: 'Please enter at least 8 characters',
+  passwordMismatch: 'Please enter the same password',
 };
 
 class LoginScreen extends Screen {
@@ -31,17 +40,37 @@ class LoginScreen extends Screen {
     await this.waitFor(SELECTORS.signupButton);
   }
 
-  /** Fill the login form and submit. */
+  /** Fill the login form and submit. Call switchToLogin() first. */
   async login({ email, password }) {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
     await (await $(SELECTORS.loginButton)).click();
   }
 
+  /** Fill the sign-up form and submit. Call switchToSignup() first. */
+  async signup({ email, password, repeatPassword = password }) {
+    await (await $(SELECTORS.email)).setValue(email);
+    await (await $(SELECTORS.password)).setValue(password);
+    await (await $(SELECTORS.repeatPassword)).setValue(repeatPassword);
+    await (await $(SELECTORS.signupButton)).click();
+  }
+
+  /**
+   * The on-screen validation text, e.g. MESSAGES.invalidEmail.
+   * The app gives these no accessibility id, so they are found by exact text.
+   */
+  validationMessage(text) {
+    return $(`android=new UiSelector().text("${text}")`);
+  }
+
   get selectors() {
     return SELECTORS;
+  }
+
+  get messages() {
+    return MESSAGES;
   }
 }
 
 export default new LoginScreen();
-export { SELECTORS };
+export { SELECTORS, MESSAGES };
