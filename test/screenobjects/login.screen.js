@@ -11,7 +11,10 @@ const SELECTORS = {
   email: '~input-email',
   password: '~input-password',
   repeatPassword: '~input-repeat-password',
-  loginButton: '~button-LOGIN',
+  // Updated selector to match the actual element id (lower‑case).
+  loginButton: '~button-login',
+  // Keep the original selector as a fallback in case the app uses the upper‑case version.
+  loginButtonAlt: '~button-LOGIN',
   signupButton: '~button-SIGN UP',
 };
 
@@ -32,7 +35,15 @@ class LoginScreen extends Screen {
 
   async switchToLogin() {
     await (await $(SELECTORS.loginContainerBtn)).click();
-    await this.waitFor(SELECTORS.loginButton);
+    // Wait for either the primary or fallback login button to appear.
+    await this.waitFor(
+      SELECTORS.loginButton,
+      20000,
+      `Login button (${SELECTORS.loginButton}) not displayed`
+    ).catch(async () => {
+      // If the primary selector fails, try the alternative.
+      await this.waitFor(SELECTORS.loginButtonAlt, 20000);
+    });
   }
 
   async switchToSignup() {

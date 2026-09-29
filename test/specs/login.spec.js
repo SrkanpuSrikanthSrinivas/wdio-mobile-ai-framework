@@ -27,7 +27,10 @@ describe('Login', () => {
 
   it('logs in with valid credentials', async () => {
     await LoginScreen.login(buildCredentials());
-    await expect(driver).toHaveAlertText(/logged in/);
+
+    // Retrieve the alert text directly and assert its content.
+    const alertText = await driver.getAlertText();
+    await expect(alertText).toMatch(/logged in/);
     await driver.acceptAlert();
   });
 
