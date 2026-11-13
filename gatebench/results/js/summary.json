@@ -1,0 +1,232 @@
+{
+ "meta": {
+  "subject": "subject",
+  "lang": "js",
+  "targets": [
+   "test/specs/landing.spec.js",
+   "test/specs/log.spec.js",
+   "test/specs/recovery.spec.js",
+   "test/specs/signin.spec.js",
+   "test/specs/signup.spec.js",
+   "test/specs/stats.spec.js",
+   "test/screenobjects/landing.screen.js",
+   "test/screenobjects/log.screen.js",
+   "test/screenobjects/recovery.screen.js",
+   "test/screenobjects/signin.screen.js",
+   "test/screenobjects/signup.screen.js",
+   "test/screenobjects/stats.screen.js",
+   "test/screenobjects/tabbar.screen.js"
+  ],
+  "mutants": 492,
+  "cag_errors_on_original": 0,
+  "tsc_errors_on_original": null,
+  "seconds": 24.976
+ },
+ "summary": [
+  {
+   "op": "M1_import_depth",
+   "cls": "G1 import",
+   "group": "field",
+   "n": 24,
+   "syntax": 0,
+   "types": 0,
+   "cag": 24,
+   "cag_or_types": 24,
+   "rules": {
+    "R1": 24
+   }
+  },
+  {
+   "op": "M2_import_target",
+   "cls": "G1 import",
+   "group": "field",
+   "n": 24,
+   "syntax": 0,
+   "types": 0,
+   "cag": 24,
+   "cag_or_types": 24,
+   "rules": {
+    "R1": 24
+   }
+  },
+  {
+   "op": "M3_placeholder_selector",
+   "cls": "G2 placeholder",
+   "group": "field",
+   "n": 42,
+   "syntax": 0,
+   "types": 0,
+   "cag": 42,
+   "cag_or_types": 42,
+   "rules": {
+    "R3": 42
+   }
+  },
+  {
+   "op": "M4_stale_selector",
+   "cls": "I3 locator",
+   "group": "field",
+   "n": 42,
+   "syntax": 0,
+   "types": 0,
+   "cag": 42,
+   "cag_or_types": 42,
+   "rules": {
+    "R2": 42
+   }
+  },
+  {
+   "op": "M5_hallucinated_member",
+   "cls": "Hallucinated API",
+   "group": "field",
+   "n": 79,
+   "syntax": 0,
+   "types": 0,
+   "cag": 79,
+   "cag_or_types": 79,
+   "rules": {
+    "R5": 79
+   }
+  },
+  {
+   "op": "M6_unreachable_spec",
+   "cls": "G5 naming",
+   "group": "field",
+   "n": 6,
+   "syntax": 0,
+   "types": 0,
+   "cag": 6,
+   "cag_or_types": 6,
+   "rules": {
+    "R4": 6
+   }
+  },
+  {
+   "op": "M7_wrong_ui_text",
+   "cls": "I3 assertion",
+   "group": "field",
+   "n": 13,
+   "syntax": 0,
+   "types": 0,
+   "cag": 13,
+   "cag_or_types": 13,
+   "rules": {
+    "R6": 13
+   }
+  },
+  {
+   "op": "B1_valid_wrong_import",
+   "cls": "Boundary: wrong module",
+   "group": "boundary",
+   "n": 22,
+   "syntax": 0,
+   "types": 0,
+   "cag": 20,
+   "cag_or_types": 20,
+   "rules": {
+    "R5": 20
+   }
+  },
+  {
+   "op": "B2_valid_wrong_selector",
+   "cls": "Boundary: wrong element",
+   "group": "boundary",
+   "n": 42,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "B3_valid_wrong_text",
+   "cls": "Boundary: wrong text",
+   "group": "boundary",
+   "n": 13,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "C1_syntax_error",
+   "cls": "Control: syntax",
+   "group": "control",
+   "n": 49,
+   "syntax": 49,
+   "types": 0,
+   "cag": 49,
+   "cag_or_types": 49,
+   "rules": {
+    "R0": 49
+   }
+  },
+  {
+   "op": "C2_logic_inversion",
+   "cls": "Control: semantic",
+   "group": "control",
+   "n": 19,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "C3_missing_await",
+   "cls": "Control: async",
+   "group": "control",
+   "n": 82,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E1_quote_style",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 13,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E2_import_order",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 6,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E3_comment_whitespace",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 13,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E4_rename_local",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 3,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  }
+ ]
+}

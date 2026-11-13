@@ -1,0 +1,7 @@
+{
+  "appDirs": ["../ext-demoapp/src", "../ext-demoapp/app"],
+  "testDir": "tests",
+  "specDir": "tests/specs",
+  "allowIds": ["Home", "Webview", "Login", "Forms", "Swipe", "Drag", "done_button", "Don’t Allow"],
+  "_allowIdsNote": "Tab labels are assigned at run time by the navigation library; done_button and Don’t Allow belong to iOS system UI, not to the app."
+}

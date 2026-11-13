@@ -1,0 +1,82 @@
+{
+  "ms": 275.533287,
+  "findings": [
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/helpers/Biometrics.ts",
+      "line": 5,
+      "message": "accessibility id 'Don’t Allow' is not defined in the application"
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "tests/screenobjects/components/NativeAlert.ts",
+      "line": 13,
+      "message": "unresolved placeholder comment: \"* * Wait for the alert to exist. * * The selector for Androi\""
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/Picker.ts",
+      "line": 50,
+      "message": "accessibility id 'done_button' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 3,
+      "message": "accessibility id 'Home' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 7,
+      "message": "accessibility id 'Webview' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 11,
+      "message": "accessibility id 'Login' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 15,
+      "message": "accessibility id 'Forms' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 19,
+      "message": "accessibility id 'Swipe' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 23,
+      "message": "accessibility id 'Drag' is not defined in the application"
+    },
+    {
+      "rule": "R2",
+      "severity": "error",
+      "file": "tests/screenobjects/components/TabBar.ts",
+      "line": 27,
+      "message": "accessibility id 'Home' is not defined in the application"
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "tests/specs/app.biometric.login.spec.ts",
+      "line": 88,
+      "message": "unresolved placeholder comment: \"@TODO: This takes very long, need to fix this\""
+    }
+  ]
+}

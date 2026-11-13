@@ -1,0 +1,216 @@
+{
+ "meta": {
+  "subject": "ext-boilerplate",
+  "lang": "ts",
+  "targets": [
+   "tests/specs/app.biometric.login.spec.ts",
+   "tests/specs/app.deep.link.navigation.spec.ts",
+   "tests/specs/app.drag.and.drop.spec.ts",
+   "tests/specs/app.forms.spec.ts",
+   "tests/specs/app.login.spec.ts",
+   "tests/specs/app.swipe.spec.ts",
+   "tests/specs/app.tab.bar.navigation.spec.ts",
+   "tests/specs/app.webview.spec.ts",
+   "tests/specs/app.webview.xpath.spec.ts",
+   "tests/screenobjects/AndroidSettings.ts",
+   "tests/screenobjects/AppScreen.ts",
+   "tests/screenobjects/DragScreen.ts",
+   "tests/screenobjects/FormsScreen.ts",
+   "tests/screenobjects/HomeScreen.ts",
+   "tests/screenobjects/LoginScreen.ts",
+   "tests/screenobjects/SwipeScreen.ts",
+   "tests/screenobjects/WebviewScreen.ts",
+   "tests/screenobjects/components/Carousel.ts",
+   "tests/screenobjects/components/NativeAlert.ts",
+   "tests/screenobjects/components/Picker.ts",
+   "tests/screenobjects/components/TabBar.ts"
+  ],
+  "mutants": 1040,
+  "cag_errors_on_original": 0,
+  "tsc_errors_on_original": 0,
+  "seconds": 125.088
+ },
+ "summary": [
+  {
+   "op": "M1_import_depth",
+   "cls": "G1 import",
+   "group": "field",
+   "n": 48,
+   "syntax": 0,
+   "types": 48,
+   "cag": 48,
+   "cag_or_types": 48,
+   "rules": {
+    "R1": 48
+   }
+  },
+  {
+   "op": "M2_import_target",
+   "cls": "G1 import",
+   "group": "field",
+   "n": 48,
+   "syntax": 0,
+   "types": 48,
+   "cag": 48,
+   "cag_or_types": 48,
+   "rules": {
+    "R1": 48
+   }
+  },
+  {
+   "op": "M3_placeholder_selector",
+   "cls": "G2 placeholder",
+   "group": "field",
+   "n": 46,
+   "syntax": 0,
+   "types": 46,
+   "cag": 46,
+   "cag_or_types": 46,
+   "rules": {
+    "R3": 46
+   }
+  },
+  {
+   "op": "M4_stale_selector",
+   "cls": "I3 locator",
+   "group": "field",
+   "n": 50,
+   "syntax": 0,
+   "types": 0,
+   "cag": 50,
+   "cag_or_types": 50,
+   "rules": {
+    "R2": 50
+   }
+  },
+  {
+   "op": "M5_hallucinated_member",
+   "cls": "Hallucinated API",
+   "group": "field",
+   "n": 235,
+   "syntax": 0,
+   "types": 235,
+   "cag": 234,
+   "cag_or_types": 235,
+   "rules": {
+    "R5": 234
+   }
+  },
+  {
+   "op": "M6_unreachable_spec",
+   "cls": "G5 naming",
+   "group": "field",
+   "n": 9,
+   "syntax": 0,
+   "types": 0,
+   "cag": 9,
+   "cag_or_types": 9,
+   "rules": {
+    "R4": 9
+   }
+  },
+  {
+   "op": "B1_valid_wrong_import",
+   "cls": "Boundary: wrong module",
+   "group": "boundary",
+   "n": 35,
+   "syntax": 0,
+   "types": 35,
+   "cag": 35,
+   "cag_or_types": 35,
+   "rules": {
+    "R5": 35
+   }
+  },
+  {
+   "op": "B2_valid_wrong_selector",
+   "cls": "Boundary: wrong element",
+   "group": "boundary",
+   "n": 50,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "C1_syntax_error",
+   "cls": "Control: syntax",
+   "group": "control",
+   "n": 118,
+   "syntax": 118,
+   "types": 118,
+   "cag": 118,
+   "cag_or_types": 118,
+   "rules": {
+    "R0": 118
+   }
+  },
+  {
+   "op": "C2_logic_inversion",
+   "cls": "Control: semantic",
+   "group": "control",
+   "n": 22,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "C3_missing_await",
+   "cls": "Control: async",
+   "group": "control",
+   "n": 312,
+   "syntax": 0,
+   "types": 20,
+   "cag": 0,
+   "cag_or_types": 20,
+   "rules": {}
+  },
+  {
+   "op": "E1_quote_style",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 18,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E2_import_order",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 9,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E3_comment_whitespace",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 21,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  },
+  {
+   "op": "E4_rename_local",
+   "cls": "Equivalent",
+   "group": "equivalent",
+   "n": 19,
+   "syntax": 0,
+   "types": 0,
+   "cag": 0,
+   "cag_or_types": 0,
+   "rules": {}
+  }
+ ]
+}

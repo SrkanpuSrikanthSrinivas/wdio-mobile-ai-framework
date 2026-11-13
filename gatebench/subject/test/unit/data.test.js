@@ -1,0 +1,23 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { uniqueEmail, isValidEmail, passwordStrength, entryVolume, weeklyVolume, recoveryScore, recoveryAdvice } from '../helpers/data.js';
+
+test('uniqueEmail produces a valid address', () => assert.ok(isValidEmail(uniqueEmail())));
+test('uniqueEmail uses the prefix', () => assert.match(uniqueEmail('signin'), /^signin\./));
+test('uniqueEmail values differ', () => assert.notEqual(uniqueEmail(), uniqueEmail()));
+test('isValidEmail accepts a normal address', () => assert.ok(isValidEmail('a@b.co')));
+test('isValidEmail rejects a missing domain', () => assert.ok(!isValidEmail('a@')));
+test('isValidEmail rejects spaces', () => assert.ok(!isValidEmail('a b@c.de')));
+test('isValidEmail rejects empty input', () => assert.ok(!isValidEmail(undefined)));
+test('passwordStrength is 0 below 8 chars', () => assert.equal(passwordStrength('Ab1!'), 0));
+test('passwordStrength is 1 for plain lowercase', () => assert.equal(passwordStrength('abcdefgh'), 1));
+test('passwordStrength rewards mixed case', () => assert.equal(passwordStrength('Abcdefgh'), 2));
+test('passwordStrength is 4 for strong passwords', () => assert.equal(passwordStrength('Abcdefg1!'), 4));
+test('entryVolume multiplies sets, reps and weight', () => assert.equal(entryVolume({ sets: 3, reps: 10, weight: 50 }), 1500));
+test('entryVolume clamps negatives to zero', () => assert.equal(entryVolume({ sets: -1, reps: 10, weight: 50 }), 0));
+test('weeklyVolume sums entries', () => assert.equal(weeklyVolume([{ sets: 1, reps: 1, weight: 10 }, { sets: 2, reps: 5, weight: 20 }]), 210));
+test('weeklyVolume of no entries is 0', () => assert.equal(weeklyVolume([]), 0));
+test('recoveryScore is 100 when rested', () => assert.equal(recoveryScore(9, 0), 100));
+test('recoveryScore is low when tired', () => assert.ok(recoveryScore(3, 3) < 40));
+test('recoveryAdvice suggests rest below 40', () => assert.equal(recoveryAdvice(20), 'Take a rest day'));
+test('recoveryAdvice says ready above 70', () => assert.equal(recoveryAdvice(85), 'Ready to train'));

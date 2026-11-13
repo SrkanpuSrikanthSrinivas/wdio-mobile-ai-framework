@@ -1,0 +1,1 @@
+{ "appDirs": ["../ext-demoapp/src", "../ext-demoapp/app"], "testDir": "tests", "specDir": "tests/specs" }
