@@ -1,40 +1,37 @@
+import { existsSync } from 'node:fs';
 import { shared } from './wdio.shared.conf.js';
 
 /**
- * wdio.browserstack.conf.js — run on a REAL device in BrowserStack's cloud.
- * No emulator, no Android SDK, no local Appium — light on your machine.
+ * wdio.browserstack.conf.js — run on a real device in BrowserStack, so every
+ * run shows up on ONE dashboard (yours). No emulator, no Android SDK locally.
  *
- * Setup (once):
- *   1. Free trial + credentials: https://www.browserstack.com/users/sign_up
- *   2. export BROWSERSTACK_USERNAME=... BROWSERSTACK_ACCESS_KEY=...
- *   3. Get the demo app once:  npm run get-app     (downloads the APK to ./apps)
- *   4. Run:  npm run android:cloud
- *
- * The browserstack service uploads the APK for you (custom_id avoids re-uploading
- * the same build every run). Watch the live session on the App Automate dashboard.
+ * Everyone uses the HOST's credentials (shared), and tags their run with their
+ * name, so you see "Alice - login", "Bob - login" ... all under one build.
+ *   export BROWSERSTACK_USERNAME=<host's user>  BROWSERSTACK_ACCESS_KEY=<host's key>
+ *   export PARTICIPANT="Alice"
+ *   export BSTACK_APP="bs://<id>"     # the app the host uploaded once (see CLOUD-DASHBOARD.md)
+ *   npm run android:cloud
  */
 
-const APP =
-  process.env.BSTACK_APP || // e.g. "bs://<id>" or "username/WdioDemoApp" after first upload
-  './apps/android.wdio.native.app.v2.2.0.apk';
+const PARTICIPANT = process.env.PARTICIPANT || 'anon';
+
+// Prefer a pre-uploaded app id (bs://... or "user/custom_id") so nobody
+// re-uploads the 118 MB APK. Falls back to a local path for the host's FIRST
+// upload only.
+const APK = existsSync('./apps/GymProgress.apk') ? './apps/GymProgress.apk' : './apps/gymprogress.apk';
+const APP = process.env.BSTACK_APP || {
+  path: APK,
+  custom_id: 'GymProgress',
+};
 
 export const config = {
   ...shared,
-  // The service manages the connection to BrowserStack's hub.
-  hostname: undefined,
-  port: undefined,
-  path: undefined,
-  protocol: undefined,
+  hostname: undefined, port: undefined, path: undefined, protocol: undefined,
 
   user: process.env.BROWSERSTACK_USERNAME,
   key: process.env.BROWSERSTACK_ACCESS_KEY,
 
-  services: [
-    ['browserstack', {
-      app: { path: APP, custom_id: 'WdioDemoApp' },
-      buildIdentifier: '#${BUILD_NUMBER}',
-    }],
-  ],
+  services: [['browserstack', { app: APP }]],
 
   specs: ['../test/specs/**/*.spec.js'],
 
@@ -47,8 +44,8 @@ export const config = {
         deviceName: process.env.BSTACK_DEVICE || 'Samsung Galaxy S23',
         osVersion: process.env.BSTACK_OS || '13.0',
         projectName: 'AIQEAcademy Workshop',
-        buildName: 'wdio-mobile-ai-lab',
-        sessionName: 'mobile-ai-lab',
+        buildName: process.env.BUILD_NAME || 'Mobile AI Workshop',   // shared -> groups everyone
+        sessionName: `${PARTICIPANT} - mobile-ai-lab`,                // per person
       },
     },
   ],

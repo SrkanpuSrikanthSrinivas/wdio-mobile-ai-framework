@@ -1,21 +1,19 @@
-import LoginScreen from '../screenobjects/login.screen.js';
+import LandingScreen from '../screenobjects/landing.screen.js';
+import SignInScreen from '../screenobjects/signin.screen.js';
+import HomeScreen from '../screenobjects/home.screen.js';
+import { DEMO } from '../helpers/data.js';
 
-describe('Login – Success', () => {
-  it('should log in successfully with valid credentials', async () => {
-    // Open the app and navigate to the Login tab
-    await LoginScreen.open();
-    await LoginScreen.switchToLogin();
-
-    // Perform login with valid credentials
-    await LoginScreen.login({
-      email: 'test@example.com',
-      password: 'Password123',
-    });
-
-    // Verify the success message is displayed
-    const successMessage = await LoginScreen.validationMessage(
-      LoginScreen.messages.loginSuccess
-    );
-    await expect(successMessage).toBeDisplayed();
+/**
+ * login.success.spec.js — the demo account signs in and lands in the app.
+ * Success in GymProgress is the next screen appearing, not an alert (APP-MAP.md).
+ */
+describe('Login success', () => {
+  it('signs in with the demo account and greets the user', async () => {
+    await LandingScreen.waitForLoaded();
+    await LandingScreen.goToSignIn();
+    await SignInScreen.waitForLoaded();
+    await SignInScreen.signIn(DEMO);
+    await HomeScreen.waitForLoaded();
+    await expect($(HomeScreen.selectors.welcome)).toHaveText('Hi, Demo User');
   });
 });

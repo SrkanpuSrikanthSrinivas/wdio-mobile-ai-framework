@@ -1,16 +1,24 @@
+import { existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { shared } from './wdio.shared.conf.js';
 
 /**
- * wdio.android.conf.js — Android capabilities for the WDIO native demo app.
+ * wdio.android.conf.js — local Android emulator (or any device Appium can see).
  *
- * `appium:app` is a URL: Appium downloads and installs the APK inside the
- * container, so nothing needs to be copied or volume-mounted. Override the
- * version/URL with APP_URL if you like.
+ * Used by `npm run android` and `npm run run:local`. Appium must already be
+ * running (run-local.sh starts it). `appium:app` is an ABSOLUTE path, because
+ * Appium resolves relative paths from its own working folder, not this repo.
+ *
+ * Override with env vars: APP_URL, DEVICE_NAME, PLATFORM_VERSION.
  */
 
-const APP_URL =
-  process.env.APP_URL ||
-  'https://github.com/webdriverio/native-demo-app/releases/download/v2.2.0/android.wdio.native.app.v2.2.0.apk';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+// The APK is git-ignored; accept either spelling of the file name (Linux is case-sensitive).
+const localApk = ['apps/GymProgress.apk', 'apps/gymprogress.apk']
+  .map((p) => resolve(root, p))
+  .find((p) => existsSync(p)) || resolve(root, 'apps/GymProgress.apk');
+const APP_URL = process.env.APP_URL || localApk;
 
 export const config = {
   ...shared,
@@ -30,7 +38,7 @@ export const config = {
       'appium:appWaitActivity': '*',
       'appium:autoGrantPermissions': true,
       'appium:newCommandTimeout': 240,
-      // The demo app + UiAutomator2 are most stable over classic protocol.
+      // Appium does not speak WebDriver BiDi; WDIO v9 would try it by default.
       'wdio:enforceWebDriverClassic': true,
     },
   ],

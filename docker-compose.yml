@@ -1,20 +1,24 @@
-# docker-compose.yml — the Android emulator + Appium, in a container.
-# This is what makes the lab "easy": nobody installs the Android SDK. One host
-# (yours, or each Linux laptop) runs this; everyone points WDIO at port 4723.
+# docker-compose.yml — a SHARED Android emulator + Appium in a container.
+# Run this on ONE x86_64 Linux host with KVM. Everyone else connects to it and
+# watches the phone live in a browser (noVNC). Nobody installs the Android SDK.
 #
-#   docker compose up -d
-#   open http://localhost:6080     # watch the emulator live (noVNC)
-#   APPIUM_HOST=127.0.0.1 npm run android
+#   HOST (x86 Linux with KVM):
+#     docker compose up -d
+#     # firewall: allow inbound 6080 (watch) and 4723 (tests)
 #
-# Requires an x86_64 host with KVM. This image is amd64-only and CANNOT run on
-# Apple Silicon (M-series) Macs — use MAC-EMULATOR.md there instead.
+#   EVERYONE (including a Mac — as a client):
+#     watch:  http://<HOST-IP>:6080
+#     run:    APPIUM_HOST=<HOST-IP> npm run android
+#
+# NOTE: amd64-only, needs /dev/kvm. Will NOT run on Apple Silicon Macs (host).
+# A Mac can still be a CLIENT that connects to a Linux host running this.
 services:
   android:
     image: budtmo/docker-android:emulator_11.0
     privileged: true
     ports:
-      - "6080:6080"   # noVNC — watch the emulator in a browser
-      - "4723:4723"   # Appium — WDIO connects here
+      - "6080:6080"     # noVNC — watch the emulator in a browser
+      - "4723:4723"     # Appium — WDIO connects here
       - "5554:5554"
       - "5555:5555"
     devices:
@@ -23,5 +27,21 @@ services:
       - EMULATOR_DEVICE=Samsung Galaxy S10
       - WEB_VNC=true
       - APPIUM=true
-    # Give the emulator room; it is heavy.
     shm_size: "2gb"
+
+  # --- Optional: a SECOND emulator for parallel runs -----------------------
+  # Uncomment to let two groups run at once. Watch at :6081, connect on 4724.
+  # (Copy the block again for android3 on 6082/4724+1, etc.)
+  # android2:
+  #   image: budtmo/docker-android:emulator_11.0
+  #   privileged: true
+  #   ports:
+  #     - "6081:6080"
+  #     - "4724:4723"
+  #   devices:
+  #     - /dev/kvm:/dev/kvm
+  #   environment:
+  #     - EMULATOR_DEVICE=Samsung Galaxy S10
+  #     - WEB_VNC=true
+  #     - APPIUM=true
+  #   shm_size: "2gb"

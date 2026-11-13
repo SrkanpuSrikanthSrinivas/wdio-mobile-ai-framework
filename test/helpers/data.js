@@ -1,45 +1,27 @@
 /**
  * data.js — pure helpers with NO device dependency, so the AI-CLI's auto-test
- * loop can validate logic instantly (see .aider.conf.yml). The mobile specs run
- * against the emulator; these run anywhere.
+ * loop can validate logic instantly. Mirrors the GymProgress app.
  */
 
-/** Build login credentials with sensible defaults and overrides. */
-export function buildCredentials(overrides = {}) {
-  return {
-    email: 'test@webdriver.io',
-    password: 'Password123!',
-    ...overrides,
-  };
-}
+// The seeded demo account (matches app/src/validation.js DEMO_USER).
+export const DEMO = { email: 'demo@gym.com', password: 'Password123' };
 
-/** A unique email so sign-up tests don't collide across runs. */
+/** A unique email so repeated sign-up runs don't collide within a session. */
 export function uniqueEmail(prefix = 'user') {
-  const stamp = Date.now().toString(36);
-  return `${prefix}.${stamp}@webdriver.io`;
+  return `${prefix}.${Date.now().toString(36)}@gym.com`;
 }
 
-/** Very small email-format check used to assert negative cases. */
-export function isValidEmail(email) {
-  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+/** Build a valid sign-up form with overrides. */
+export function buildSignup(overrides = {}) {
+  return { name: 'Alex Carter', email: uniqueEmail(), password: 'Password123', confirm: 'Password123', ...overrides };
 }
 
-/** Turn an accessibility id into a WDIO selector (`~id`). */
+/** Build a workout entry (strings, as typed). */
+export function buildWorkout(overrides = {}) {
+  return { exercise: 'Squats', sets: '3', reps: '10', ...overrides };
+}
+
 export function byAccessibilityId(id) {
   if (!id) throw new Error('accessibility id required');
   return `~${id}`;
-}
-
-export async function waitForAlert(timeout = 10000) {
-  await driver.waitUntil(
-    async () => {
-      try {
-        await driver.getAlertText();
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    { timeout, interval: 300, timeoutMsg: 'Login alert never appeared' }
-  );
 }

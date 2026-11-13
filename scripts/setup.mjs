@@ -62,15 +62,16 @@ try {
 try { say('Installing toklite...'); run('npm install -g toklite js-tiktoken'); ok('toklite installed'); results.push(['toklite', true]); }
 catch { warn('toklite install failed — try: npm install -g toklite js-tiktoken'); results.push(['toklite', false]); }
 
-// 5. project dependencies
-try { say('Installing project dependencies...'); run('npm install'); ok('project dependencies installed'); results.push(['project deps', true]); }
-catch { warn('npm install failed — run it manually: npm install'); results.push(['project deps', false]); }
+// 5. (skipped) The WebdriverIO deps are NOT needed to edit tests or validate them
+//    locally — the phone runs in GitHub Actions. If you ever want to run the
+//    emulator locally, run:  npm ci   (and: npm run add:local-appium)
+results.push(['project deps', 'skipped']);
 
 // 6. verify
 say('\n--- checking your machine ---');
 try { run('node scripts/verify.mjs'); } catch { /* verify prints its own status */ }
 
-const failed = results.filter(([, v]) => !v).map(([n]) => n);
+const failed = results.filter(([, v]) => v === false).map(([n]) => n);
 say('');
 if (failed.length === 0) {
   say(`${G}Setup complete.${X} If a command says "not found", open a NEW terminal (PATH updates), then run:`);

@@ -1,0 +1,3 @@
+# generated per-host; regenerate with: node grid/generate.mjs <N>
+docker-compose.yml
+dashboard.html

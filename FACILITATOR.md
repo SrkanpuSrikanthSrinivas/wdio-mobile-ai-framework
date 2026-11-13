@@ -90,16 +90,17 @@ device parts, EDIT-ONLY mode still covers the core skill.
 ## Live demo script (~4 min, up front)
 ```bash
 aider
-  /add test/specs/login.spec.js test/screenobjects/login.screen.js CONVENTIONS.md
-  Complete the TODO: add a sign-up test that asserts the alert contains 'signed up'.
+  /add test/specs/login.spec.js test/screenobjects/signin.screen.js CONVENTIONS.md
+  Complete the TODO in login.spec.js: sign in, then log a workout; assert count = 1.
   Follow CONVENTIONS.md. Then run npm run validate.
 /run npm run android      # then show it on noVNC
 ```
 
 ## The seeded task
-`test/specs/login.spec.js` has a `TODO` for a sign-up test; the empty-field case
-is a good second ask. Reference: `solutions/login.solution.spec.js`. The app's
-success alerts contain "logged in" / "signed up".
+`test/specs/login.spec.js` has a `TODO` (sign in with the demo account, then log a
+workout, assert count = 1). Reference:
+`solutions/login-and-log.solution.spec.js`. App: GymProgress (`/app`) — a multi-
+screen app (landing/signup/signin/home); selectors are accessibility ids.
 
 ## Common gotchas
 - `aider: command not found` -> `python -m aider`.

@@ -1,54 +1,93 @@
-# App map — WebdriverIO native demo app v2.2.0 (Android)
+# App map — GymProgress (Android)
 
-The ONLY locators and texts that exist in the app under test. Tests may use
-nothing that isn't listed here. If a test needs something missing, stop and ask;
-never guess a selector. (Texts verified from the app bundle; ids from the passing
-screen objects.)
+The ONLY locators and texts that exist in the app under test, taken from the app
+source (`app/src/screens`). Every element sets `testID` = `accessibilityLabel`, so
+Appium finds it as `~<id>`. Tests may use nothing that isn't listed here. If a
+test needs something missing, stop and ask; never guess a selector.
 
-## Bottom tabs  → `Screen.openTab(name)`
-| Tab | Locator |
-| --- | --- |
-| Home | `~Home` |
-| Webview | `~Webview` |
-| Login | `~Login` |
-| Forms | `~Forms` |
-| Swipe | `~Swipe` |
-| Drag | `~Drag` |
+## Flow
+Landing → Sign in (or Sign up) → Main app with tabs Log · Stats · Recovery.
+There are **no native alerts**: success means the next screen appears; failure
+shows an inline error text.
 
-## Login tab  → `test/screenobjects/login.screen.js`
-The tab has two modes, switched by two buttons at the top.
-
-| Element | Locator | Mode |
-| --- | --- | --- |
-| "Login" mode button | `~button-login-container` | both |
-| "Sign up" mode button | `~button-sign-up-container` | both |
-| Email field | `~input-email` | both |
-| Password field | `~input-password` | both |
-| Repeat password field | `~input-repeat-password` | Sign up only |
-| LOGIN button | `~button-LOGIN` | Login |
-| SIGN UP button | `~button-SIGN UP` | Sign up |
-
-### What the app does
-| Action | Result |
-| --- | --- |
-| Valid email + password ≥ 8 chars, tap LOGIN | Native alert, title "Success", message **"You are logged in!"** |
-| Valid email + matching passwords ≥ 8 chars, tap SIGN UP | Native alert, title "Signed Up!", message **"You successfully signed up!"** |
-| Invalid email, tap LOGIN or SIGN UP | On-screen text **"Please enter a valid email address"**, no alert |
-| Password shorter than 8, tap LOGIN or SIGN UP | On-screen text **"Please enter at least 8 characters"**, no alert |
-| Repeat password differs (Sign up) | On-screen text **"Please enter the same password"**, no alert |
-
-Any email/password that passes validation "logs in" — there is no real backend.
-Validation texts have no accessibility id: use `LoginScreen.validationMessage(text)`.
-
-## Forms tab  → `test/screenobjects/forms.screen.js`
+## Landing  → `landing.screen.js`
 | Element | Locator |
 | --- | --- |
-| Text input | `~input-text` |
-| Typed-text echo | `~input-text-result` |
-| Switch | `~switch` |
-| Dropdown | `~Dropdown` |
-| Active button | `~button-Active` |
-| Inactive button | `~button-Inactive` |
+| Title | `~text-landing-title` |
+| "Sign up" button | `~button-goto-signup` |
+| "Sign in" button | `~button-goto-signin` |
 
-Texts: switch hint **"Click to turn the switch ON"** / **"...OFF"**; Active button
-opens an alert **"This button is active"**.
+## Sign in  → `signin.screen.js`
+| Element | Locator |
+| --- | --- |
+| Title | `~text-signin-title` |
+| Email | `~input-email` |
+| Password | `~input-password` |
+| Sign in button | `~button-signin` |
+| Error text | `~text-signin-error` |
+| Demo-account hint | `~text-demo-hint` |
+| Back link | `~link-back-landing` |
+
+Demo account (always exists): **demo@gym.com / Password123** → `DEMO` in `test/helpers/data.js`.
+
+| Action | Result |
+| --- | --- |
+| Demo account, tap Sign in | Main app; `~text-welcome` reads **"Hi, Demo User"** |
+| Wrong password | `~text-signin-error` = **"Invalid email or password"** |
+| Invalid email | `~text-signin-error` = **"Enter a valid email"** |
+| Empty password | `~text-signin-error` = **"Password is required"** |
+
+## Sign up  → `signup.screen.js`
+| Element | Locator |
+| --- | --- |
+| Title | `~text-signup-title` |
+| Name / Email / Password / Confirm | `~input-name` `~input-email` `~input-password` `~input-confirm` |
+| Sign up button | `~button-signup` |
+| Error text | `~text-signup-error` |
+
+| Action | Result |
+| --- | --- |
+| Valid, new email | Main app; `~text-welcome` reads **"Hi, <name>"** |
+| Passwords differ | **"Passwords do not match"** |
+| Password under 6 chars | **"Password must be at least 6 characters"** |
+| Invalid email | **"Enter a valid email"** |
+| Empty name | **"Name is required"** |
+| Email already used | **"An account with that email already exists"** |
+
+## Main app  → `home.screen.js`
+| Element | Locator |
+| --- | --- |
+| Welcome header | `~text-welcome` ("Hi, <name>") |
+| Log out | `~button-logout` |
+| Tabs | `~tab-log` `~tab-stats` `~tab-recovery` |
+
+### Log tab
+| Element | Locator |
+| --- | --- |
+| Title | `~text-log-title` |
+| Exercise name | `~input-exercise` |
+| Set reps / weight | `~input-set-reps` `~input-set-weight` |
+| Add set | `~button-add-set` |
+| Sets added | `~text-set-count` |
+| Save entry | `~button-save-entry` |
+| Entries count | `~text-entry-count` (**"Workouts logged: N"**) |
+| Last entry | `~text-last-entry` |
+| Error text | `~text-error` |
+| Clear all | `~button-clear` |
+| Cardio fields | `~input-duration` `~input-distance` `~input-incline` `~input-resistance` |
+| Note | `~input-note` `~button-pin-note` `~text-pinned-note` |
+| Entry / set rows, delete | `~row-entry` `~row-set` `~button-delete-entry` |
+
+Errors: "Exercise name is required", "Add at least one set", "Reps must be a positive
+number", "Weight must be 0 or more", "Duration must be a positive number".
+
+### Stats tab  → `stats.screen.js`
+`~text-stats-title` `~text-total-workouts` `~text-total-volume` `~input-best-lift`
+`~input-bodyweight` `~button-rate` `~text-strength-rating` `~chart-progress` `~text-progress-summary`
+
+### Recovery tab  → `recovery.screen.js`
+`~text-recovery-title` `~input-sleep` `~input-soreness` `~input-resting-hr`
+`~button-calc-recovery` `~text-recovery-score` `~text-recovery-label` `~text-recovery-advice`
+
+### Legacy ids (older single-screen layout, still in source)
+`~button-add` `~text-count` `~text-last` `~row-workout` `~input-sets` `~input-reps`

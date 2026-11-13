@@ -43,7 +43,7 @@ npm run android -- --spec ./test/specs/login.spec.js
 # 4. live AI edit through toklite
 export ANTHROPIC_API_KEY=<your workshop key>
 npm run ai
-#    /add test/specs/login.spec.js test/screenobjects/login.screen.js CONVENTIONS.md
+#    /add test/specs/login.spec.js test/screenobjects/signin.screen.js CONVENTIONS.md
 #    "Complete the TODO: add a sign-up test asserting the alert contains 'signed
 #     up'. Follow CONVENTIONS.md. Then run npm run validate."
 #    EXPECT: aider edits both files, runs validate itself, commits each step.
@@ -93,8 +93,8 @@ device → and toklite made it cheaper," with zero SDK setup.
 
 ## Known gotchas to check in rehearsal (from FACILITATOR.md)
 - `ollama`/model — n/a here; model is via toklite → provider.
-- Alert text: this app pops "logged in" / "signed up"; confirm on your image and
-  adjust the specs if your build differs.
+- Selectors: GymProgress sets accessibilityLabel=id, so `~id` locators match; if
+  one does not, switch it to a a resource-id in the screen object (see APP-BUILD.md).
 - Appium base path: config uses `/` (Appium 2). If your docker image is Appium 1,
   set `APPIUM_PATH=/wd/hub`.
 - toklite bypass: if `npm run tok:stats` shows 0 requests, export
