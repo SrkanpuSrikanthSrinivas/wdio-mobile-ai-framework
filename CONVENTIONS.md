@@ -1,33 +1,76 @@
-# Mobile testing conventions (loaded automatically by the AI-CLI)
+# Mobile testing conventions — GymProgress (loaded automatically by the AI-CLI)
 
-The agent reads this on every run. It's how you make an AI-CLI write mobile tests
-*your* way — your standards become a file it follows, not a review comment.
+The agent reads this on every prompt, with APP-MAP.md. Follow it exactly.
+`npm run validate` runs after every edit and fails anything that breaks these rules.
 
-## Locators
-- Prefer **accessibility ids** (`~name`) — stable and cross-platform. Use the
-  `byAccessibilityId` helper or the `~` shorthand.
-- Never use brittle absolute XPath. If you must use XPath, anchor it on text or a
-  resource-id, and add a comment explaining why an accessibility id wasn't available.
+## Hard rules (the gate enforces these)
+1. **Where**: new tests are `test/specs/<feature>.spec.js`. Only `*.spec.js` files run.
+2. **Modules**: ESM only. `import`, never `require()`. Relative imports keep `.js`.
+   From a spec the paths are exactly:
+   - `import LandingScreen from '../screenobjects/landing.screen.js';`
+   - `import SignInScreen from '../screenobjects/signin.screen.js';`
+   - `import SignUpScreen from '../screenobjects/signup.screen.js';`
+   - `import HomeScreen from '../screenobjects/home.screen.js';`
+   - `import StatsScreen from '../screenobjects/stats.screen.js';`
+   - `import RecoveryScreen from '../screenobjects/recovery.screen.js';`
+   - `import { DEMO, buildSignup, uniqueEmail } from '../helpers/data.js';`
+3. **No extra libraries**: `describe`, `it`, `expect`, `$`, `driver` are WebdriverIO
+   globals. Never import `chai`, `assert` or any package not in package.json.
+4. **Native app, not a website**: no `browser.url()`, CSS selectors or DOM ideas.
+5. **Only real locators**: only ids and texts in APP-MAP.md, through screen objects.
+   Never invent a screen, selector or expected message. Missing? Stop and say so.
+6. **Every `it` asserts** with at least one `await expect(...)`.
+7. **No fixed waits** (`pause`/`sleep`). Screen objects already wait.
+8. **Never route around the gate**: no helpers that build selectors (e.g. `byAccessibilityId`)
+   in specs, no files outside `test/specs`, `test/screenobjects`, `test/helpers`.
+9. **GymProgress has no alerts**: success = the next screen appears (e.g. the
+   welcome header); failure = an inline error text. Never use `getAlertText`.
 
 ## Test structure
-- One behavior per `it`; the title states the behavior in plain language.
-- Every test ends in a real assertion (`expect(...)`). A test with no assertion
-  is a bug.
-- Cover the **negative path** (bad input, cancelled flows), not just the happy path.
-- Put reusable steps in a screen object under `test/screenobjects/`, not in the spec.
-- Reuse data builders from `test/helpers/data.js`; don't hard-code emails/passwords
-  inline when a builder exists.
+- Every test starts on the Landing screen (the app restarts for each spec file).
+- One behavior per `it`; the title states it in plain language. Cover bad input too.
+- Specs call intent-level screen methods; selectors live only in screen objects.
+- Use `DEMO` for sign-in and `buildSignup()` / `uniqueEmail()` for new accounts.
 
-## Waits & stability
-- Always wait for an element before acting: `waitForDisplayed` / the `waitFor`
-  helper. Never use fixed `pause()`/`sleep` to "fix" flakiness.
-- Keep timeouts reasonable (<= 20s) so a real failure fails fast in the workshop.
+## Screen methods you can use
+| Screen | Method |
+| --- | --- |
+| LandingScreen | `waitForLoaded()`, `goToSignIn()`, `goToSignUp()` |
+| SignInScreen | `waitForLoaded()`, `signIn({ email, password })`, `getError()`, `selectors.error` |
+| SignUpScreen | `waitForLoaded()`, `signUp({ name, email, password, confirm })`, `selectors.error` |
+| HomeScreen | `waitForLoaded()`, `logStrength(exercise, [{ reps, weight }])`, `openStats()`, `openRecovery()`, `logout()`, `clearAll()`, `selectors.welcome`, `selectors.entryCount`, `selectors.error` |
 
-## Screen objects
-- Selectors live in a `SELECTORS` map at the top of the screen object.
-- Screens expose intent-level methods (`login({email, password})`), not raw taps.
+If a test needs a new step, add a method to the screen object (selector from
+APP-MAP.md in its `SELECTORS` map) and call it from the spec.
+
+## Golden example — copy this shape
+```js
+import LandingScreen from '../screenobjects/landing.screen.js';
+import SignInScreen from '../screenobjects/signin.screen.js';
+import HomeScreen from '../screenobjects/home.screen.js';
+import { DEMO } from '../helpers/data.js';
+
+describe('Sign in', () => {
+  beforeEach(async () => {
+    await LandingScreen.waitForLoaded();
+    await LandingScreen.goToSignIn();
+    await SignInScreen.waitForLoaded();
+  });
+
+  it('signs in with the demo account and greets the user', async () => {
+    await SignInScreen.signIn(DEMO);
+    await HomeScreen.waitForLoaded();
+    await expect($(HomeScreen.selectors.welcome)).toHaveText('Hi, Demo User');
+  });
+
+  it('rejects a wrong password', async () => {
+    await SignInScreen.signIn({ email: DEMO.email, password: 'WrongPass9' });
+    await expect($(SignInScreen.selectors.error)).toHaveText('Invalid email or password');
+  });
+});
+```
 
 ## What NOT to do
-- Do not weaken or delete an assertion to make a failing test pass — fix the
-  screen object or the app path instead.
-- Do not add parallel/maxInstances changes; this lab runs one emulator.
+- Never weaken or delete an assertion to make a test pass; fix the steps instead.
+- Don't change configs or parallelism. Don't edit files you weren't asked to,
+  except adding a screen-object method.

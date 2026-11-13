@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { shared } from './wdio.shared.conf.js';
 
 /**
@@ -17,8 +18,9 @@ const PARTICIPANT = process.env.PARTICIPANT || 'anon';
 // Prefer a pre-uploaded app id (bs://... or "user/custom_id") so nobody
 // re-uploads the 118 MB APK. Falls back to a local path for the host's FIRST
 // upload only.
+const APK = existsSync('./apps/GymProgress.apk') ? './apps/GymProgress.apk' : './apps/gymprogress.apk';
 const APP = process.env.BSTACK_APP || {
-  path: './apps/GymProgress.apk',
+  path: APK,
   custom_id: 'GymProgress',
 };
 

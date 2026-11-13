@@ -1,0 +1,51 @@
+# GitLab CI — run the mobile tests on a containerized emulator, no local setup.
+# This is the "connect to CI" moment: push, and your AI-edited tests run on a
+# real Android emulator in the pipeline, with screenshots/logs as artifacts.
+#
+# IMPORTANT: the Android emulator needs KVM. Use a runner tagged `kvm` (a Linux
+# runner with /dev/kvm and privileged docker). If you don't have one, use the
+# cloud-device-farm fallback described in FACILITATOR.md (BrowserStack/Sauce),
+# which needs no KVM.
+
+stages:
+  - validate
+  - mobile
+
+# Fast, device-free checks the whole room can rely on (runs anywhere).
+validate:
+  stage: validate
+  image: node:20-slim
+  script:
+    - npm ci || npm install
+    - node --test test/helpers/*.test.js
+    - node scripts/check-syntax.mjs
+  rules:
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# The real thing: emulator + Appium in a service, WDIO in the job.
+android-e2e:
+  stage: mobile
+  tags: [kvm]                     # a runner with /dev/kvm + privileged docker
+  image: node:20
+  services:
+    - name: budtmo/docker-android:emulator_11.0
+      alias: android
+  variables:
+    APPIUM_HOST: android          # the service alias
+    APPIUM_PORT: "4723"
+    EMULATOR_DEVICE: "Samsung Galaxy S10"
+    WEB_VNC: "false"
+    APPIUM: "true"
+  script:
+    - npm ci || npm install
+    - node scripts/wait-for-appium.mjs   # block until the emulator+Appium are ready
+    - npm run android
+  artifacts:
+    when: always
+    paths:
+      - screenshots/
+    expire_in: 1 week
+  allow_failure: true             # keep an unfinished lab from blocking the pipeline
+  rules:
+    - if: $CI_COMMIT_BRANCH

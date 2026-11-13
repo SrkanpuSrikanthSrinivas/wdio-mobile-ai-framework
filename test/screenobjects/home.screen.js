@@ -18,12 +18,14 @@ const SELECTORS = {
   setCount: '~text-set-count',
   saveEntry: '~button-save-entry',
   entryCount: '~text-entry-count',
+  lastEntry: '~text-last-entry',
+  deleteEntry: '~button-delete-entry',
   error: '~text-error',
   clearButton: '~button-clear',
 };
 
 class HomeScreen extends Screen {
-  async waitForLoaded() { await this.waitFor(SELECTORS.welcome); }
+  async waitForLoaded() { await this.waitFor(SELECTORS.welcome, { timeout: 30000 }); }
   async openStats() { await (await $(SELECTORS.tabStats)).click(); }
   async openRecovery() { await (await $(SELECTORS.tabRecovery)).click(); }
   async logout() { await (await $(SELECTORS.logoutButton)).click(); }
@@ -34,9 +36,16 @@ class HomeScreen extends Screen {
     for (const s of sets) {
       await (await $(SELECTORS.setReps)).setValue(s.reps);
       await (await $(SELECTORS.setWeight)).setValue(s.weight);
-      await (await $(SELECTORS.addSet)).click();
+      await this.hideKeyboard();
+      await this.tap(SELECTORS.addSet);
     }
-    await (await $(SELECTORS.saveEntry)).click();
+    await this.hideKeyboard();
+    await this.tap(SELECTORS.saveEntry);
+  }
+
+  /** Delete the most recent entry (the first Delete in the list). */
+  async deleteLatestEntry() {
+    await this.tap(SELECTORS.deleteEntry);
   }
 
   async clearAll() { await (await $(SELECTORS.clearButton)).click(); }

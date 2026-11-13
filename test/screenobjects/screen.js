@@ -1,35 +1,31 @@
 /**
- * screen.js — base screen. Tab-bar navigation + a wait helper every screen uses.
- * Locator strategy for this app: accessibility ids (the `~name` shorthand), which
- * are stable and cross-platform. See CONVENTIONS.md.
+ * screen.js — base screen: waits and the keyboard. Every GymProgress element is
+ * found by accessibility id (`~id`), listed in APP-MAP.md. See CONVENTIONS.md.
  */
-
-const TABS = {
-  Home: '~Home',
-  Webview: '~Webview',
-  Login: '~Login',
-  Forms: '~Forms',
-  Swipe: '~Swipe',
-  Drag: '~Drag',
-};
-
 class Screen {
-  /** Tap a bottom-tab by name and wait for it to be shown. */
-  async openTab(name) {
-    const selector = TABS[name];
-    if (!selector) throw new Error(`Unknown tab: ${name}`);
-    const tab = await $(selector);
-    await tab.waitForDisplayed({ timeout: 20000 });
-    await tab.click();
-  }
-
   /** Wait until a selector is displayed (default) or gone. */
   async waitFor(selector, { reverse = false, timeout = 20000 } = {}) {
     const el = await $(selector);
     await el.waitForDisplayed({ timeout, reverse });
     return el;
   }
+
+  /** Scroll an element into view if needed, then tap it (the Log screen scrolls). */
+  async tap(selector) {
+    const el = await $(selector);
+    if (!(await el.isDisplayed())) {
+      try { await el.scrollIntoView(); } catch { /* already reachable */ }
+    }
+    await el.waitForDisplayed({ timeout: 20000 });
+    await el.click();
+  }
+
+  /** Close the on-screen keyboard if it is open, so it can't cover a button. */
+  async hideKeyboard() {
+    try {
+      if (await driver.isKeyboardShown()) await driver.hideKeyboard();
+    } catch { /* no keyboard: nothing to do */ }
+  }
 }
 
 export default Screen;
-export { TABS };

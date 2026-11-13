@@ -13,6 +13,7 @@ class SignInScreen extends Screen {
   async signIn({ email = '', password = '' }) {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
+    await this.hideKeyboard();
     await (await $(SELECTORS.submit)).click();
   }
   async getError() {
