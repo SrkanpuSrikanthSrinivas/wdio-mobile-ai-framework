@@ -9,7 +9,7 @@
     "android": "wdio run config/wdio.android.conf.js",
     "get-app": "bash scripts/get-app.sh",
     "verify": "node scripts/verify.mjs",
-    "validate": "node --test test/helpers/*.test.js app/src/*.test.js && node scripts/check-syntax.mjs",
+    "validate": "node --test test/helpers/*.test.js app/src/*.test.js && node scripts/check-syntax.mjs && node scripts/check-imports.mjs && node scripts/check-locators.mjs",
     "check": "node scripts/check-syntax.mjs",
     "tok:stats": "toklite stats",
     "tok:verify": "toklite verify",
@@ -17,7 +17,13 @@
     "demo:savings": "node scripts/demo-toklite-savings.mjs",
     "android:cloud": "wdio run config/wdio.browserstack.conf.js",
     "add:local-appium": "npm i -D @wdio/appium-service appium appium-uiautomator2-driver",
-    "setup": "node scripts/setup.mjs"
+    "setup": "node scripts/setup.mjs",
+    "check:imports": "node scripts/check-imports.mjs",
+    "check:locators": "node scripts/check-locators.mjs",
+    "run:local": "bash scripts/run-local.sh",
+    "run:cloud": "bash scripts/run-cloud.sh",
+    "ai:gemini": "node scripts/ai.mjs gemini",
+    "ai:local": "node scripts/ai.mjs ollama"
   },
   "keywords": [
     "webdriverio",

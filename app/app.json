@@ -2,7 +2,7 @@
   "expo": {
     "name": "GymProgress",
     "slug": "gymprogress",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,11 +13,13 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "versionCode": 2
+      }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    }
+    "extra": {
+      "eas": {
+        "projectId": "78cb3c6c-51ad-4a43-be01-759b90d2615d"
+      }
+    },
+    "owner": "srkanpus-team"
   }
 }

@@ -25,7 +25,18 @@ export function summarize({ exercise, sets, reps }) {
   return `${String(exercise).trim()} — ${parseCount(sets)}x${parseCount(reps)}`;
 }
 
-/** Total reps across all logged workouts. */
+/** Total reps across all logged workouts.
+ *  Invalid entries (non‑positive sets or reps) are ignored rather than
+ *  propagating NaN, ensuring the function always returns a numeric total.
+ */
 export function totalReps(list) {
-  return list.reduce((sum, w) => sum + parseCount(w.sets) * parseCount(w.reps), 0);
+  return list.reduce((sum, w) => {
+    const sets = parseCount(w.sets);
+    const reps = parseCount(w.reps);
+    if (sets === null || reps === null) {
+      // Skip malformed entries
+      return sum;
+    }
+    return sum + sets * reps;
+  }, 0);
 }

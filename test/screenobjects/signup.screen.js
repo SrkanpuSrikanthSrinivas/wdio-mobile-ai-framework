@@ -17,6 +17,7 @@ class SignUpScreen extends Screen {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
     await (await $(SELECTORS.confirm)).setValue(confirm);
+    await this.hideKeyboard();
     await (await $(SELECTORS.submit)).click();
   }
   async getError() {

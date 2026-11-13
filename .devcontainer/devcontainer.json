@@ -1,0 +1,14 @@
+{
+  "name": "wdio-mobile-ai-lab",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "onCreateCommand": "bash .devcontainer/onCreate.sh",
+  "postCreateCommand": "node scripts/verify.mjs || true",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/node/.local/bin"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-vscode.vscode-github-actions"]
+    }
+  }
+}

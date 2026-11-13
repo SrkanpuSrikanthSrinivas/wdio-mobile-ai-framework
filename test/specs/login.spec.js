@@ -1,3 +1,4 @@
+// test/specs/login.spec.js
 import LandingScreen from '../screenobjects/landing.screen.js';
 import SignInScreen from '../screenobjects/signin.screen.js';
 import HomeScreen from '../screenobjects/home.screen.js';
@@ -22,7 +23,14 @@ describe('Login', () => {
   it('rejects a wrong password', async () => {
     await SignInScreen.signIn({ email: DEMO.email, password: 'WrongPass9' });
     await expect($(SignInScreen.selectors.error)).toBeDisplayed();
-    await expect($(SignInScreen.selectors.error)).toHaveText(expect.stringContaining('Invalid'));
+    await expect($(SignInScreen.selectors.error)).toHaveText('Invalid email or password');
+  });
+
+  it('greets the demo user by name after a successful login', async () => {
+    await SignInScreen.signIn(DEMO);
+    await HomeScreen.waitForLoaded();
+    // Exact text from APP-MAP.md: the app greets by account name, not email.
+    await expect($(HomeScreen.selectors.welcome)).toHaveText('Hi, Demo User');
   });
 
   // TODO(participant): after signing in, log a strength exercise (Squats, one set
