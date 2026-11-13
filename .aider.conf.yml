@@ -12,3 +12,7 @@ auto-commits: true
 gitignore: false
 map-tokens: 512
 max-chat-history-tokens: 1024
+# Commits are authored by the developer who reviews them.
+attribute-author: false
+attribute-committer: false
+attribute-co-authored-by: false
