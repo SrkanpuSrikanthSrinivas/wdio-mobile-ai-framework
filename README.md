@@ -42,16 +42,24 @@ prompt ─► aider ─► edits test/specs + test/screenobjects ─► npm run 
 
 ## Quick start
 
-**Requirements:** Node 18+, Git. For local runs also Java 17, the Android SDK,
-an AVD, and Appium with the UiAutomator2 driver (see `MAC-EMULATOR.md`).
+**Requirements:** Node 18+ and Git. For local device runs you also need Java 17,
+the Android SDK, an AVD, and Appium with the UiAutomator2 driver
+(see `MAC-EMULATOR.md`).
 
 ```bash
 git clone https://github.com/SrkanpuSrikanthSrinivas/wdio-mobile-ai-framework.git
 cd wdio-mobile-ai-framework
-npm install
+npm install                   # WebdriverIO and the project packages
+npm run setup                 # the AI tools: uv + aider (Python 3.12) and toklite
 cp .env.example .env          # add your keys; .env is never committed
+npm run verify                # check the machine is ready
 npm run validate              # the gate: no device needed
 ```
+
+`npm run setup` works on macOS, Linux and Windows and is safe to re-run. If a
+command says "not found" afterwards, open a new terminal so the PATH update
+takes effect. Prefer a browser-only setup? Open the repo in a GitHub Codespace
+(`CODESPACES.md`); aider and toklite are installed there for you.
 
 Build the app once (`APP-BUILD.md`) and place it at `apps/GymProgress.apk`.
 
@@ -131,10 +139,24 @@ legacy/               Earlier versions (WebdriverIO demo app), not run
 | `npm run run:cloud -- <spec>` | Credentials check, gate, then BrowserStack |
 | `npm run android` / `android:cloud` | WebdriverIO only, local or BrowserStack |
 | `npm run ai:gemini` / `ai:groq` / `ai:local` | Start aider with a free model |
-| `npm run setup` / `verify` | Install the AI tools / check the machine |
+| `npm run setup` | Install the AI tools: uv + aider (Python 3.12) and toklite |
+| `npm run verify` | Check Node, Git, aider, toklite and an AI key |
 | `npm run tok:stats` | Token savings from toklite |
 
 ---
+
+## Troubleshooting
+
+| Symptom | Fix |
+| --- | --- |
+| `aider: command not found` after setup | Open a new terminal. Still missing: `uv tool update-shell`, then a new terminal, or use `python3 -m aider` |
+| `spawn aider ENOENT` | aider is not on the PATH yet: new terminal, or re-run `npm run setup` |
+| aider warns "model not found" | Harmless; continue |
+| Groq "rate limit" | The free tier allows 8,000 tokens per minute: `/clear` between prompts, or use `npm run ai:gemini` |
+| `npm run tok:stats` shows 0 requests | `export OPENAI_API_BASE=http://127.0.0.1:8787/v1`, then relaunch `npm run ai:groq` |
+| Emulator stops while booting | Usually low disk space: see "Low on disk space" in `MAC-EMULATOR.md` |
+| BrowserStack HTTP 401 | Check `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` in `.env` |
+| Windows | Use PowerShell; set variables with `setx NAME value` and open a new window |
 
 ## Writing tests by hand
 
