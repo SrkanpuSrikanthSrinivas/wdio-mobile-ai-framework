@@ -1,36 +1,39 @@
-import LoginScreen from '../screenobjects/login.screen.js';
-import { buildCredentials } from '../helpers/data.js';
+// test/specs/login.spec.js
+import LandingScreen from '../screenobjects/landing.screen.js';
+import SignInScreen from '../screenobjects/signin.screen.js';
+import HomeScreen from '../screenobjects/home.screen.js';
+import { DEMO } from '../helpers/data.js';
 
 /**
- * login.spec.js - the test cases you'll UPDATE with the AI-CLI during the lab.
- *
- * On a valid login the demo app pops a native alert containing "logged in".
- * On sign-up it pops one containing "signed up".
+ * login.spec.js — sign-in flow for GymProgress.
+ * Uses the seeded demo account so it's deterministic on every device.
  */
-
 describe('Login', () => {
   beforeEach(async () => {
-    await LoginScreen.open();
-    await LoginScreen.switchToLogin();
+    await LandingScreen.waitForLoaded();
+    await LandingScreen.goToSignIn();
+    await SignInScreen.waitForLoaded();
   });
 
-  it('logs in with valid credentials', async () => {
-    await LoginScreen.login(buildCredentials());
-
-    await expect(await LoginScreen.readAlert()).toBe(LoginScreen.messages.loginSuccess);
+  it('signs in with the demo account and reaches home', async () => {
+    await SignInScreen.signIn(DEMO);
+    await expect($(HomeScreen.selectors.welcome)).toBeDisplayed();
   });
 
-  it('rejects an invalid email format', async () => {
-    await LoginScreen.login(buildCredentials({ email: 'not-an-email' }));
-    // The success alert must NOT appear for a malformed email.
-    await expect(LoginScreen.validationMessage(LoginScreen.messages.invalidEmail)).toBeDisplayed();
-    await expect(await LoginScreen.readAlert({ timeout: 3000 })).toBe('');
+  it('rejects a wrong password', async () => {
+    await SignInScreen.signIn({ email: DEMO.email, password: 'WrongPass9' });
+    await expect($(SignInScreen.selectors.error)).toBeDisplayed();
+    await expect($(SignInScreen.selectors.error)).toHaveText('Invalid email or password');
   });
 
-  // ---------------------------------------------------------------------
-  // TODO(participant): add a test case with the AI-CLI.
-  // Ask aider: "Add a test that switches to Sign up, signs up with a fresh
-  // unique email and matching passwords, and asserts the alert contains
-  // 'signed up'. Follow CONVENTIONS.md. Then run npm run validate."
-  // ---------------------------------------------------------------------
+  it('greets the demo user by name after a successful login', async () => {
+    await SignInScreen.signIn(DEMO);
+    await HomeScreen.waitForLoaded();
+    // Exact text from APP-MAP.md: the app greets by account name, not email.
+    await expect($(HomeScreen.selectors.welcome)).toHaveText('Hi, Demo User');
+  });
+
+  // TODO(participant): after signing in, log a strength exercise (Squats, one set
+  // 10x50) via the Log tab and assert the count reads 'Workouts logged: 1'.
+  // (Use the HomeScreen.logStrength helper.)
 });

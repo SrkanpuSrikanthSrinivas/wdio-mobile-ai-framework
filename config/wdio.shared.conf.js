@@ -11,6 +11,9 @@
 
 import { mkdirSync } from 'node:fs';
 
+// Android package id of the app under test (app/app.json -> android.package).
+export const APP_ID = process.env.APP_ID || 'com.aiqeacademy.gymprogress';
+
 export const shared = {
   // --- Remote Appium (in Docker), not a local install -------------------
   hostname: process.env.APPIUM_HOST || '127.0.0.1',
@@ -34,13 +37,21 @@ export const shared = {
   // Fail fast in a workshop so a broken emulator doesn't hang the room.
   specFileRetries: 0,
 
-  // On a failed test, save a screenshot so CI artifacts show what happened.
+  // After every test: on failure save a screenshot (CI artifacts show what
+  // happened), then restart the app. GymProgress keeps sign-in and workouts in
+  // memory only, so a restart puts every it() back on the Landing screen with
+  // empty state. Without it, the 2nd test in a file starts logged in and fails.
   afterTest: async function (test, _ctx, { passed }) {
-    if (passed) return;
+    if (!passed) {
+      try {
+        mkdirSync('screenshots', { recursive: true });
+        const name = `${Date.now()}-${String(test.title).replace(/\W+/g, '_')}.png`;
+        await browser.saveScreenshot(`screenshots/${name}`);
+      } catch { /* best effort */ }
+    }
     try {
-      mkdirSync('screenshots', { recursive: true });
-      const name = `${Date.now()}-${String(test.title).replace(/\W+/g, '_')}.png`;
-      await browser.saveScreenshot(`screenshots/${name}`);
-    } catch { /* best effort */ }
+      await driver.terminateApp(APP_ID);
+      await driver.activateApp(APP_ID);
+    } catch { /* best effort: the next test's waitForLoaded() will report it */ }
   },
 };

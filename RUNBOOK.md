@@ -35,14 +35,13 @@ npm run validate      # device-free health check
 
 ## Schedule (120 min)
 
-| Time | Lab | You'll produce |
+| Time | Segment | What happens |
 |---|---|---|
-| 0:00-0:10 | [00 Setup](labs/00-setup.md) | Verified env, mode known |
-| 0:10-0:25 | [01 Recon](labs/01-recon.md) | A missing test case, named |
-| 0:25-1:00 | [02 Update tests](labs/02-update-tests.md) | AI-written sign-up + empty-field tests |
-| 1:00-1:25 | [03 Run on Docker](labs/03-run-docker.md) | Your tests passing on a real emulator |
-| 1:25-1:40 | [04 CI](labs/04-ci.md) | Green pipeline + self-reviewed MR |
-| 1:40-2:00 | [05 toklite reveal](labs/05-toklite.md) | Tokens + money toklite saved; Q&A |
+| 0:00–0:10 | Welcome | What we'll build; how the pieces fit |
+| 0:10–0:55 | [Lab 01 — Installation](labs/01-installation.md) | Install the tools step by step + tour the framework |
+| 0:55–1:40 | [Lab 02 — The task](labs/02-task.md) | Write a test in plain English, review it, run it on the dashboard |
+| 1:40–1:55 | [Lab 03 — Challenges](labs/03-challenges.md) | Add more tests at your own pace |
+| 1:55–2:00 | Wrap | toklite savings + Q&A |
 
 ## The one rule
 Tests are the spec. Never let the agent weaken an assertion to make a test pass -
@@ -54,4 +53,4 @@ follows it too.)
 - **EDIT-ONLY / OFFLINE** - edit + `npm run validate`; watch the shared run or CI.
   See `offline-fallback/README.md`. Nobody is blocked.
 
-Start at [Lab 00](labs/00-setup.md).
+Start at [Lab 00](labs/01-installation.md).

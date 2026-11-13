@@ -19,14 +19,12 @@ code=$(curl -s -o /dev/null -w "%{http_code}" -u "$BROWSERSTACK_USERNAME:$BROWSE
 [ "$code" = 200 ] && ok "credentials accepted by BrowserStack" || { bad "BrowserStack rejected the credentials (HTTP $code)"; exit 1; }
 
 step "2. App"
-APK="apps/android.wdio.native.app.v2.2.0.apk"
+APK="apps/GymProgress.apk"; [ -f "$APK" ] || APK="apps/gymprogress.apk"   # either spelling
 if [ -f "$APK" ]; then
-  unset BSTACK_APP   # upload the local APK (custom_id avoids re-uploading the same build)
-  ok "uploading $APK (first run only; later runs reuse it)"
-elif [ -n "${BSTACK_APP:-}" ]; then
-  ok "using app from .env ($BSTACK_APP)"
+  unset BSTACK_APP   # upload our own APK (custom_id GymProgress: later runs reuse it)
+  ok "GymProgress: uploading $APK (first run only; later runs reuse it)"
 else
-  bad "no APK and no BSTACK_APP → npm run get-app"; exit 1
+  bad "apps/GymProgress.apk not found → see APP-BUILD.md (eas build)"; exit 1
 fi
 
 step "3. Device-free gate"

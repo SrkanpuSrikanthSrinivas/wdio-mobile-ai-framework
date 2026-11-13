@@ -26,11 +26,28 @@ const rules = [
 ];
 
 const problems = [];
+// Tests live only in test/specs/*.spec.js; helpers only in test/helpers, screens in test/screenobjects.
+for (const f of files) {
+  if (!/^test\/(specs|screenobjects|helpers)\//.test(f.replace(/\\/g, '/')))
+    problems.push(`${f}: tests go in test/specs/*.spec.js, helpers in test/helpers/, screens in test/screenobjects/`);
+}
 for (const f of files) {
   const src = readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  for (const m of src.matchAll(/byAccessibilityId\(\s*['"`]([^'"`$]+)['"`]\s*\)/g))
+    if (!known.has('~' + m[1])) problems.push(`${f}: byAccessibilityId('${m[1]}') — '~${m[1]}' is not in APP-MAP.md; don't route around the check`);
+  if (f.includes('/specs/') && /byAccessibilityId\s*\(|\$\(\s*['"`]~/.test(src))
+    problems.push(`${f}: selectors belong in screen objects, not in specs — call a screen method`);
   for (const m of src.matchAll(/['"`](~[^'"`$]+)['"`]/g))
     if (!known.has(m[1])) problems.push(`${f}: locator '${m[1]}' is not in APP-MAP.md — don't guess selectors`);
   for (const [re, msg] of rules) if (re.test(src)) problems.push(`${f}: ${msg}`);
+  // Specs may import only screen objects and test helpers. An AI once imported the
+  // React Native app's own screen components and invented methods on them; every
+  // file existed, so the import check passed, and it only failed on the device.
+  if (f.includes('/specs/')) {
+    for (const m of src.matchAll(/import\s+[^'"]*?from\s+['"](\.[^'"]+)['"]/g))
+      if (!/^\.\.\/(screenobjects|helpers)\/[\w.-]+\.js$/.test(m[1]))
+        problems.push(`${f}: import '${m[1]}' — specs import only ../screenobjects/*.js and ../helpers/*.js`);
+  }
   if (f.includes('/specs/')) {
     const its = (src.match(/\bit\s*\(/g) || []).length;
     const expects = (src.match(/\bexpect\s*\(/g) || []).length;

@@ -71,8 +71,9 @@ fi
 trap '[ "$STARTED_APPIUM" = 1 ] && kill $APPIUM_PID 2>/dev/null' EXIT
 
 step "5. Run the specs"
-APK="$PWD/apps/android.wdio.native.app.v2.2.0.apk"
-[ -f "$APK" ] && export APP_URL="$APK" && ok "app: apps/$(basename "$APK")"
+APK="$PWD/apps/GymProgress.apk"; [ -f "$APK" ] || APK="$PWD/apps/gymprogress.apk"   # either spelling
+[ -f "$APK" ] || { bad "apps/GymProgress.apk not found → see APP-BUILD.md (eas build)"; exit 1; }
+export APP_URL="$APK"; ok "app: apps/$(basename "$APK")"
 SPEC="${1:-}"; [ -n "$SPEC" ] && ok "spec: $SPEC"
 APPIUM_HOST=127.0.0.1 npm run -s android -- ${SPEC:+--spec "$SPEC"}
 code=$?

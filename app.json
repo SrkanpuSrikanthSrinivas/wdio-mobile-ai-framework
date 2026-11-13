@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "aed5e011-9415-497d-8062-f6b2a7663b71"
+      }
+    },
+    "android": {
+      "package": "com.srkanpusteam.wdiomobileailab"
+    }
+  }
+}
