@@ -8,17 +8,6 @@ import { buildCredentials } from '../helpers/data.js';
  * On sign-up it pops one containing "signed up".
  */
 
-/** Return the current alert text, or '' if no alert is open. Dismisses it. */
-async function readAndDismissAlert() {
-  try {
-    const text = await driver.getAlertText();
-    await driver.dismissAlert();
-    return text;
-  } catch {
-    return '';
-  }
-}
-
 describe('Login', () => {
   beforeEach(async () => {
     await LoginScreen.open();
@@ -28,17 +17,14 @@ describe('Login', () => {
   it('logs in with valid credentials', async () => {
     await LoginScreen.login(buildCredentials());
 
-    // Retrieve the alert text directly and assert its content.
-    const alertText = await driver.getAlertText();
-    await expect(alertText).toMatch(/logged in/);
-    await driver.acceptAlert();
+    await expect(await LoginScreen.readAlert()).toBe(LoginScreen.messages.loginSuccess);
   });
 
   it('rejects an invalid email format', async () => {
     await LoginScreen.login(buildCredentials({ email: 'not-an-email' }));
     // The success alert must NOT appear for a malformed email.
-    const alertText = await readAndDismissAlert();
-    await expect(alertText).not.toContain('logged in');
+    await expect(LoginScreen.validationMessage(LoginScreen.messages.invalidEmail)).toBeDisplayed();
+    await expect(await LoginScreen.readAlert({ timeout: 3000 })).toBe('');
   });
 
   // ---------------------------------------------------------------------

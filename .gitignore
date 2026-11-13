@@ -9,3 +9,4 @@ video/
 .idea/
 .vscode/
 .env
+!.aider.conf.yml

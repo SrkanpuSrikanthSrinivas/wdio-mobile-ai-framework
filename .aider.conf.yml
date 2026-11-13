@@ -1,0 +1,15 @@
+# .aider.conf.yml — loaded automatically when aider starts in this repo.
+# Every prompt gets the team's rules, the app's real locators, and the shared
+# helpers as read-only context, and every edit is checked and committed.
+
+read:
+  - CONVENTIONS.md                  # how tests are written here
+  - APP-MAP.md                      # the app's real screens, ids and messages
+  - test/screenobjects/screen.js    # base screen: tabs, waits, alerts
+  - test/helpers/data.js            # test-data builders
+
+test-cmd: npm run validate          # device-free gate: unit tests + syntax + imports + locators
+auto-test: true                     # run it after every edit; failures go back to the model
+auto-commits: true                  # one reviewable commit per accepted edit
+gitignore: false                    # don't offer to rewrite .gitignore
+map-tokens: 1024
