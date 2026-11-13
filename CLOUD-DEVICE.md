@@ -44,7 +44,7 @@ labs are identical. Only *where the phone runs* changed.
 - **For a whole room:** free trials usually allow **1 test at a time**. Great for
   your demo and for taking turns; for many people running at once you'd need a
   paid plan with parallels, or have the room edit locally and run in CI.
-- Prefer LambdaTest or Sauce Labs? Same idea — tell me and I'll add that config.
+- Prefer LambdaTest? Use `config/wdio.lambdatest.conf.js`. Sauce Labs works the same way with its own capabilities.
 - Want the phone to run for free in CI instead of a farm? GitHub Actions can run
   an emulator on every push (no local install, no farm account) — ask and I'll
   add the workflow.

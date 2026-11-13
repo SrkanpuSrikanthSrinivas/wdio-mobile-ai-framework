@@ -1,7 +1,7 @@
 {
-  "name": "wdio-mobile-ai-lab",
+  "name": "wdio-mobile-ai-framework",
   "version": "1.0.0",
-  "description": "WDIO + Appium mobile automation lab, driven by an AI-CLI, executed in Docker/CI",
+  "description": "WebdriverIO + Appium mobile test framework with an AI-CLI workflow and a device-free validation gate",
   "type": "module",
   "scripts": {
     "ai": "node scripts/ai.mjs",
@@ -29,9 +29,10 @@
     "webdriverio",
     "appium",
     "android",
-    "mobile",
+    "mobile-testing",
+    "test-automation",
     "ai-cli",
-    "workshop"
+    "aider"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -40,5 +41,10 @@
     "@wdio/local-runner": "^9.20.0",
     "@wdio/mocha-framework": "^9.20.0",
     "@wdio/spec-reporter": "^9.20.0"
+  },
+  "author": "Srikanth Srinivas",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SrkanpuSrikanthSrinivas/wdio-mobile-ai-framework.git"
   }
 }

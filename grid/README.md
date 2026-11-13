@@ -54,9 +54,8 @@ A simple sign-up sheet ("Device 3 → Priya") avoids two people grabbing the sam
 ## Want auto-routing (people don't pick a port)?
 That's the next step up: put a **Selenium Grid 4** hub in front and register the
 emulators as nodes, so everyone points at one hub URL and the hub assigns a free
-device (plus a built-in Grid dashboard). It's more setup and tuning — ask if you
-want me to add that; the simple per-port version above is the reliable starting
-point.
+device (plus a built-in Grid dashboard). It's more setup and tuning; the simple per-port version above is the reliable
+starting point.
 
 ## Reset between sessions
 ```bash

@@ -25,8 +25,8 @@ for (const f of files) {
   }
 }
 // Every WDIO config that package.json runs must exist and still export a
-// `config` (an AI-CLI once replaced wdio.android.conf.js with a placeholder line,
-// which parses as valid JS but breaks every local run).
+// `config` with capabilities. A file reduced to a placeholder line still parses
+// as valid JS, but breaks every run that uses it.
 const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 const configs = new Set(Object.values(pkg.scripts || {})
   .flatMap((cmd) => [...cmd.matchAll(/wdio run (\S+)/g)].map((m) => m[1])));

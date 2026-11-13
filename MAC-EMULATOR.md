@@ -55,5 +55,5 @@ npm run android
 
 ## Don't want to install the SDK at all?
 Point the tests at a cloud device farm (BrowserStack / LambdaTest / Sauce Labs
-free trial) instead — no local Android, works on any host. Ask and I'll wire the
-capabilities; it's a small change to `config/wdio.android.conf.js`.
+free trial) instead — no local Android, works on any host. See
+`config/wdio.browserstack.conf.js` and `CLOUD-DASHBOARD.md`.
