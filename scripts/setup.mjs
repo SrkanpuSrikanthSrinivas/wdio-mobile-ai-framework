@@ -79,4 +79,4 @@ if (failed.length === 0) {
 } else {
   say(`${Y}Setup finished with issues:${X} ${failed.join(', ')}. See the Troubleshooting section in README.md.`);
 }
-say('\nNext: add your Groq key (see README step 4), then  npm run ai:groq\n');
+say('\nNext: copy .env.example to .env, add an AI key (GEMINI_API_KEY or GROQ_API_KEY), then  npm run ai:gemini\n');
