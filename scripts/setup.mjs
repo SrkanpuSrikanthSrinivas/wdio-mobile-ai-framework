@@ -48,7 +48,7 @@ if (!uv) {
     uv = findUv();
   } catch { /* handled below */ }
 }
-if (uv) { ok('uv ready'); } else { warn('Could not install uv automatically — see README step 1a'); }
+if (uv) { ok('uv ready'); } else { warn('Could not install uv automatically — see README → Quick start'); }
 
 // 3. aider (via uv, on Python 3.12)
 try {
@@ -56,7 +56,7 @@ try {
   say('Installing aider (the AI tool)... this can take a minute.');
   run(`"${uv}" tool install --python 3.12 aider-chat`);
   ok('aider installed'); results.push(['aider', true]);
-} catch { warn('aider install failed — see README Troubleshooting'); results.push(['aider', false]); }
+} catch { warn('aider install failed — see README → Troubleshooting'); results.push(['aider', false]); }
 
 // 4. toklite + js-tiktoken (global)
 try { say('Installing toklite...'); run('npm install -g toklite js-tiktoken'); ok('toklite installed'); results.push(['toklite', true]); }
