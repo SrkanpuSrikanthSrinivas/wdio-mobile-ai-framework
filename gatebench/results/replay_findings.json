@@ -1,0 +1,96 @@
+{
+  "ms": 173.387558,
+  "findings": [
+    {
+      "rule": "R4",
+      "severity": "error",
+      "file": "test/specs/signin.test.js",
+      "line": 1,
+      "message": "spec file matches no runner spec pattern (test/specs/**/*.spec.js) and will never run"
+    },
+    {
+      "rule": "R1",
+      "severity": "error",
+      "file": "test/specs/signin.test.js",
+      "line": 7,
+      "message": "import '../../screenobjects/forms.screen' does not resolve to a file"
+    },
+    {
+      "rule": "R1",
+      "severity": "error",
+      "file": "test/specs/signin.test.js",
+      "line": 8,
+      "message": "import '../../screenobjects/gym.screen' does not resolve to a file"
+    },
+    {
+      "rule": "R3",
+      "severity": "error",
+      "file": "test/specs/signin.test.js",
+      "line": 28,
+      "message": "selector call $() has no locator (placeholder)"
+    },
+    {
+      "rule": "R3",
+      "severity": "error",
+      "file": "test/specs/signin.test.js",
+      "line": 32,
+      "message": "selector call $() has no locator (placeholder)"
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 1,
+      "message": "unresolved placeholder comment: \"* * screen-object helpers. Adjust selectors, screen-object m\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 21,
+      "message": "unresolved placeholder comment: \"Open the sign-in form (adjust the tab name if needed)\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 24,
+      "message": "unresolved placeholder comment: \"Fill in the email field - replace with the appropriate metho\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 25,
+      "message": "hedged assumption: \"assuming the first input is email\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 27,
+      "message": "unresolved placeholder comment: \"Fill in the password field - replace with the appropriate se\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 28,
+      "message": "unresolved placeholder comment: \"selector for password input\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 31,
+      "message": "unresolved placeholder comment: \"Submit the form - replace with the actual button selector or\""
+    },
+    {
+      "rule": "R3",
+      "severity": "warning",
+      "file": "test/specs/signin.test.js",
+      "line": 32,
+      "message": "unresolved placeholder comment: \"selector for sign-in button\""
+    }
+  ]
+}
