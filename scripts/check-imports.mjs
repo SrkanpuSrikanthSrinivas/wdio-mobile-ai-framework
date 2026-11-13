@@ -51,7 +51,7 @@ console.log(`Imports OK: ${files.length} files checked.`);
 
 // --- Calls to functions that don't exist -------------------------------------
 // `node --check` can't see these either: a spec that calls a helper it never
-// imported or defined crashes only on the device (a real AI-CLI mistake).
+// imported or defined crashes only on the device.
 const GLOBALS = new Set(['expect', 'driver', 'browser', '$', '$$', 'describe', 'it', 'before', 'after',
   'beforeEach', 'afterEach', 'require', 'setTimeout', 'Promise', 'String', 'Number', 'Date', 'JSON',
   'Object', 'Array', 'Math', 'console', 'Error', 'RegExp', 'Boolean', 'Symbol', 'parseInt', 'parseFloat']);

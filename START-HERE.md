@@ -4,7 +4,7 @@ This is a 2-hour hands-on workshop. Participants take a ready-made mobile test
 project, **edit the tests by typing plain English** to an AI tool, and **watch
 the tests run on a real Android phone** — without installing any Android tools on
 their laptop. The phone runs in the cloud/Docker; the AI runs through **toklite**
-(your tool) which quietly cuts the token cost.
+which quietly cuts the token cost.
 
 There are two roles: **you (the host)** set up two things once. **Participants**
 just clone and type. Here's each, in order.

@@ -24,7 +24,7 @@ are **exact and provider-verified**, not estimated. This is the default in
 
 ```bash
 export ANTHROPIC_API_KEY="<workshop-key>"     # from your facilitator
-npm run ai                                     # = toklite run -- aider (Claude)
+npm run ai                                     # = toklite run -- aider (Anthropic model)
 ```
 At the wrap:
 ```bash

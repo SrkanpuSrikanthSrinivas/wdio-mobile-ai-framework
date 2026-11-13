@@ -40,9 +40,8 @@ for (const f of files) {
   for (const m of src.matchAll(/['"`](~[^'"`$]+)['"`]/g))
     if (!known.has(m[1])) problems.push(`${f}: locator '${m[1]}' is not in APP-MAP.md — don't guess selectors`);
   for (const [re, msg] of rules) if (re.test(src)) problems.push(`${f}: ${msg}`);
-  // Specs may import only screen objects and test helpers. An AI once imported the
-  // React Native app's own screen components and invented methods on them; every
-  // file existed, so the import check passed, and it only failed on the device.
+  // Specs may import only screen objects and test helpers. Importing app source
+  // (e.g. React Native screen components) resolves fine but fails on the device.
   if (f.includes('/specs/')) {
     for (const m of src.matchAll(/import\s+[^'"]*?from\s+['"](\.[^'"]+)['"]/g))
       if (!/^\.\.\/(screenobjects|helpers)\/[\w.-]+\.js$/.test(m[1]))

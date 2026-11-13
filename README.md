@@ -1,147 +1,164 @@
-# Mobile Automation with AI — Workshop
+# WDIO Mobile AI Framework
 
-Write mobile app tests by typing plain English to an AI, then run them on a real
-Android phone in the cloud. The app under test is **GymProgress** (source in
-`app/`), which you build once into an APK — see `APP-BUILD.md`. Setup is one command. Nothing heavy runs on your
-laptop — no Android SDK, no emulator. The AI runs through **toklite** (which cuts
-token cost), and the phone runs in **GitHub Actions** (free).
+A WebdriverIO + Appium framework for Android that lets you write mobile tests in
+plain English with a command-line AI assistant, and checks every generated test
+against the real app before it reaches a device.
+
+- **Contract-first locators.** Every element the tests may use is listed in
+  `APP-MAP.md`, taken from the app source. Tests can't reference anything else.
+- **A device-free gate.** `npm run validate` runs unit tests, syntax, import and
+  locator checks in about a second, with no emulator.
+- **AI-CLI loop.** [aider](https://aider.chat) reads the project rules on every
+  prompt, runs the gate after every edit, and commits each change.
+- **Run anywhere.** The same specs run on a local emulator, BrowserStack App
+  Automate, LambdaTest, GitHub Actions or a Docker emulator grid.
+
+The app under test is **GymProgress**, a small React Native (Expo) app in `app/`,
+built so that every element has a stable accessibility id.
 
 ---
 
-## 1. Get the project
+## How it works
+
+```
+prompt ─► aider ─► edits test/specs + test/screenobjects ─► npm run validate
+            ▲                                                      │
+            └──────────── errors go back to the model ◄── fail ────┤
+                                                                   ▼ pass
+                         run:local (emulator)  /  run:cloud (BrowserStack)
+                                     │
+                         WebdriverIO v9 ─► Appium + UiAutomator2 ─► GymProgress
+```
+
+| Layer | Tool |
+| --- | --- |
+| Test runner | WebdriverIO v9, Mocha (BDD) |
+| Device automation | Appium 2+, UiAutomator2 driver |
+| Devices | Android emulator, BrowserStack, LambdaTest, Docker (`budtmo/docker-android`) |
+| AI-CLI | aider with Gemini, Groq, Ollama or Anthropic models |
+| Token proxy (optional) | [toklite](https://www.npmjs.com/package/toklite), local proxy that removes repeated context |
+
+---
+
+## Quick start
+
+**Requirements:** Node 18+, Git. For local runs also Java 17, the Android SDK,
+an AVD, and Appium with the UiAutomator2 driver (see `MAC-EMULATOR.md`).
+
 ```bash
-git clone <your-repo-url> wdio-mobile-ai-lab
-cd wdio-mobile-ai-lab
+git clone https://github.com/SrkanpuSrikanthSrinivas/wdio-mobile-ai-framework.git
+cd wdio-mobile-ai-framework
+npm install
+cp .env.example .env          # add your keys; .env is never committed
+npm run validate              # the gate: no device needed
 ```
 
-## 2. Set up — two ways (pick one)
+Build the app once (`APP-BUILD.md`) and place it at `apps/GymProgress.apk`.
 
-### Fastest: in the browser (no install) — recommended for the workshop
-Open the project in a **GitHub Codespace**: on your fork, click **Code →
-Codespaces → Create codespace**. Everything (aider, toklite) is already
-installed. Skip to step 3. Full details: `CODESPACES.md`.
-
-### Or set up on your own machine
-For the **workshop** we do this by hand, step by step, to learn it — see
-`labs/01-installation.md`. To do it all at once instead:
+### Run on a local emulator
 ```bash
-npm run setup
+npm run run:local -- test/specs/login-workout-logout.spec.js
 ```
-This installs **uv + aider** (the AI tool, on the correct Python — no version
-errors) and **toklite**, then checks your machine. Works on macOS, Windows, and
-Linux, and is safe to re-run. It does **not** download the big WebdriverIO
-packages — you don't need them locally (the phone runs in the cloud), so this is
-quick.
+The script checks prerequisites, runs the gate, boots the AVD, starts Appium and
+runs the spec. Output is saved to `logs/run-local.log`.
 
-> If a command says "not found" afterward, open a **new terminal** (PATH updates
-> after install) and run `npm run verify`.
-
-## 3. Add your AI key (two options — pick one)
-
-**Option A — use the shared workshop key (easiest).** The host will give you one
-line. Create a file named **`.env`** (copy `.env.example`) and paste it in:
-```
-GROQ_API_KEY=gsk_the_key_the_host_shares
-```
-
-**Option B — use your own free key.** Make one at https://console.groq.com/keys
-(no credit card) and put it in the same `.env` file.
-
-Either way it's a Groq key and it's free to you. (Prefer `export GROQ_API_KEY=...`
-over a file? That works too — on Windows use `setx GROQ_API_KEY gsk_...` and open
-a new window.)
-
-## 4. Edit a test with the AI
+### Run on a real device (BrowserStack)
+Set `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` in `.env`, then:
 ```bash
-npm run ai:groq
+npm run run:cloud -- test/specs/login-workout-logout.spec.js
 ```
-This opens aider through toklite. Inside it, type:
+
+### Write a test with the AI-CLI
+```bash
+npm run ai:gemini -- test/specs/signin.validation.spec.js
 ```
-/add test/specs/login.spec.js test/screenobjects/signin.screen.js test/screenobjects/home.screen.js CONVENTIONS.md
+Then describe the test, naming the file, the steps and the exact expected text:
 ```
-then type your request in plain English, e.g.:
+Create test/specs/signin.validation.spec.js. From Landing go to Sign in.
+Test 1: a wrong password shows 'Invalid email or password'.
+Test 2: the email 'not-an-email' shows 'Enter a valid email'.
+Follow CONVENTIONS.md and APP-MAP.md.
 ```
-Complete the TODO in login.spec.js: sign in with the demo account, then log a
-workout and assert the count reads 'Workouts logged: 1'. Follow CONVENTIONS.md.
-```
-aider writes the test, checks it, and saves each change. Type `/exit` when done.
-See how much toklite saved with `npm run tok:stats`.
-
-## 5. The tests
-- They live in **`test/specs/`** — `signup.spec.js` and `login.spec.js` (login has a TODO).
-- Check them any time — instant, no phone needed:
-  ```bash
-  npm run validate
-  ```
-
-## 6. Run on a real phone — on the shared dashboard
-Everyone runs on a real device in the cloud using the host's account, so all runs
-appear on **one dashboard** the host projects live (each tagged with your name).
-1. In `.env`, add your name and the host's cloud values (from the board):
-   ```
-   PARTICIPANT=YourName
-   BROWSERSTACK_USERNAME=...   BROWSERSTACK_ACCESS_KEY=...   BSTACK_APP=bs://...
-   ```
-2. Run it:
-   ```bash
-   npm run android:cloud
-   ```
-3. Your run shows up on the host's dashboard with live video + a recording.
-
-Full setup (host uploads the app once, shares credentials): `CLOUD-DASHBOARD.md`.
-
-_Prefer a free option with no farm account? `GITHUB-ACTIONS.md` runs the phone in
-GitHub's cloud instead._
-
-> **Want the room to watch the phone live instead?** Run one shared Android
-> emulator in Docker that everyone connects to and watches in a browser — see
-> `SHARED-EMULATOR.md`. (Needs one x86 Linux host with KVM; a Mac can't host it
-> but can connect as a client.)
+More prompts: `PROMPTS.md`. Other providers: `npm run ai:groq`, `npm run ai:local` (Ollama).
 
 ---
 
-## Command cheat-sheet
-| Command | What it does |
-|---|---|
-| `npm run setup` | Install the AI tools locally (uv+aider, toklite) |
-| `npm run verify` | Check your machine is ready |
-| `npm run ai:groq` | Edit tests with the AI (free Groq) through toklite |
-| `npm run validate` | Check the tests are valid (instant, no phone) |
-| `npm run tok:stats` | Show tokens saved by toklite |
-| `npm run android:cloud` | Run on a real phone; shows on the shared dashboard |
+## The gate
 
-**The whole flow:** clone → `npm run setup` → add key → `npm run ai:groq` → `npm run android:cloud`.
+`npm run validate` must pass before any device run. It is wired into aider
+(`test-cmd`), both run scripts and CI.
 
----
+| Check | Rejects |
+| --- | --- |
+| Unit tests (`node:test`) | Broken test data helpers and app logic |
+| `check-syntax.mjs` | Syntax errors; missing or gutted WDIO configs |
+| `check-imports.mjs` | Missing files, missing `.js` extensions, undeclared packages, `require()`, calls to functions that are never imported or defined |
+| `check-locators.mjs` | Ids not in `APP-MAP.md`, selectors in specs, web-only APIs, CSS selectors, fixed waits, absolute XPath, specs importing anything but screen objects and helpers, tests without assertions |
 
-## Shared key vs. your own key (for the host)
-Both use the same `GROQ_API_KEY` — only where it comes from differs, so either
-works with no code change.
-- **Shared (your key for the room):** put your key on a slide; everyone pastes it
-  into `.env`. Simplest, but one **free** Groq key shared by many people can hit
-  rate limits — smoother if your Groq account is on a paid tier, and toklite's
-  reduction/caching helps. Rotate or delete the key after the session.
-- **Personal:** each person makes their own free key (2 minutes). No rate
-  contention. Best for larger rooms.
+The gate checks structure, not meaning: a real locator with a wrong expected
+value still needs human review. `examples/rejected-specs/` shows what it catches.
 
 ---
 
-## Troubleshooting
-- **`aider: command not found`** → open a **new terminal**. Still missing?
-  `uv tool update-shell`, then a new terminal, or use `python3 -m aider`.
-- **`spawn aider ENOENT`** → aider isn't on PATH yet; new terminal, or re-run
-  `npm run setup`.
-- **aider warns "model not found"** → harmless, continue.
-- **`npm run tok:stats` shows 0 requests** → `export OPENAI_API_BASE=http://127.0.0.1:8787/v1`
-  and relaunch `npm run ai:groq`.
-- **Windows** → use PowerShell; `setx VAR value` (new window) for env vars.
+## Project structure
 
-## Optional / advanced (ignore unless you need it)
-- `APP-BUILD.md` — build the GymProgress app (EAS) and put it on BrowserStack (host, once).
-- `CLOUD-DASHBOARD.md` — everyone's runs on one BrowserStack dashboard (host + pre-flight).
-- `labs/03-challenges.md` — extra tasks to fill the full 2 hours.
-- `RUNBOOK.md` / `FACILITATOR.md` — schedule and host notes.
-- `TOKLITE.md` / `GROQ-SETUP.md` — AI/token-saving details.
-- `CODESPACES.md` — run setup in the browser (no local install).
-- Other ways to run the phone (not needed with BrowserStack): `GITHUB-ACTIONS.md`,
-  `SHARED-EMULATOR.md`, `grid/README.md`, `CLOUD-DEVICE.md`, `MAC-EMULATOR.md`.
+```
+app/                  GymProgress source (React Native / Expo) and its unit tests
+apps/                 Built APK (git-ignored)
+APP-MAP.md            Every locator and message the tests may use
+CONVENTIONS.md        Rules for tests, read by the AI-CLI on every prompt
+.aider.conf.yml       AI-CLI context, test command and auto-commit settings
+config/               wdio.shared, wdio.android (local), wdio.browserstack, wdio.lambdatest
+test/screenobjects/   One screen object per screen; all selectors live here
+test/helpers/         Test data (demo account, unique emails, form builders)
+test/specs/           The tests; only *.spec.js files run
+scripts/              Gate checks, run scripts, AI launcher, setup and verify
+examples/             Rejected specs, with the rule that catches each one
+grid/, docker-compose.yml   Self-hosted Android emulators in Docker
+gatebench/            Replication package for the gate's mutation evaluation
+labs/                 Hands-on workshop exercises
+legacy/               Earlier versions (WebdriverIO demo app), not run
+```
+
+---
+
+## Commands
+
+| Command | Does |
+| --- | --- |
+| `npm run validate` | Unit tests + syntax + imports + locators, no device |
+| `npm run run:local -- <spec>` | Gate, emulator, Appium, then the spec |
+| `npm run run:cloud -- <spec>` | Credentials check, gate, then BrowserStack |
+| `npm run android` / `android:cloud` | WebdriverIO only, local or BrowserStack |
+| `npm run ai:gemini` / `ai:groq` / `ai:local` | Start aider with a free model |
+| `npm run setup` / `verify` | Install the AI tools / check the machine |
+| `npm run tok:stats` | Token savings from toklite |
+
+---
+
+## Writing tests by hand
+
+Follow `CONVENTIONS.md`. In short: start every test on the Landing screen, call
+screen-object methods, take ids only from `APP-MAP.md`, assert with WebdriverIO's
+`expect`, and never use fixed waits. The app restarts after every test, so each
+`it` starts from a clean state.
+
+## CI
+
+- `.github/workflows/android.yml` boots an API 34 emulator on GitHub Actions and
+  uploads a screen recording, the Appium log and screenshots.
+- `.gitlab-ci.yml` runs the gate anywhere and the device job on a KVM runner.
+
+## Workshop material
+
+`START-HERE.md`, `RUNBOOK.md`, `FACILITATOR.md`, `PRE-WORKSHOP.md` and `labs/`
+describe a two-hour hands-on session built on this framework.
+
+## Contributing
+
+Issues and pull requests are welcome. Run `npm run validate` before opening a PR,
+and add new locators to `APP-MAP.md` together with the app change that creates them.
+
+## License
+
+MIT © 2026 Srikanth Srinivas. See `LICENSE`.
