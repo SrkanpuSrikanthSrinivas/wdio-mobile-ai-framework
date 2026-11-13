@@ -29,3 +29,17 @@ export function byAccessibilityId(id) {
   if (!id) throw new Error('accessibility id required');
   return `~${id}`;
 }
+
+export async function waitForAlert(timeout = 10000) {
+  await driver.waitUntil(
+    async () => {
+      try {
+        await driver.getAlertText();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { timeout, interval: 300, timeoutMsg: 'Login alert never appeared' }
+  );
+}

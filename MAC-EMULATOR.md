@@ -57,3 +57,15 @@ npm run android
 Point the tests at a cloud device farm (BrowserStack / LambdaTest / Sauce Labs
 free trial) instead — no local Android, works on any host. Ask and I'll wire the
 capabilities; it's a small change to `config/wdio.android.conf.js`.
+
+## Low on disk space
+If `logs/emulator.log` says `Not enough space to create userdata partition`, the AVD
+reserves more internal storage than your disk has free. The demo app needs far less.
+Shrink it (the AVD must not be running):
+```bash
+AVD_CFG=~/.android/avd/wdio.avd/config.ini
+sed -i '' 's/^disk.dataPartition.size=.*/disk.dataPartition.size=2G/' "$AVD_CFG"
+grep -q '^disk.dataPartition.size' "$AVD_CFG" || echo 'disk.dataPartition.size=2G' >> "$AVD_CFG"
+```
+The emulator also warns when free memory is low (it falls back to slower software
+graphics): close Chrome tabs and other heavy apps before a run.

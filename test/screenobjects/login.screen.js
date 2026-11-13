@@ -41,12 +41,7 @@ class LoginScreen extends Screen {
 
   async switchToLogin() {
     await (await $(SELECTORS.loginContainerBtn)).click();
-    // Wait for the (correct) login button to appear.
-    await this.waitFor(
-      SELECTORS.loginButton,
-      20000,
-      `Login button (${SELECTORS.loginButton}) not displayed`
-    );
+    await this.waitFor(SELECTORS.loginButton);
   }
 
   async switchToSignup() {
@@ -58,6 +53,7 @@ class LoginScreen extends Screen {
   async login({ email, password }) {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
+    await this.hideKeyboard();
     await (await $(SELECTORS.loginButton)).click();
   }
 
@@ -66,6 +62,7 @@ class LoginScreen extends Screen {
     await (await $(SELECTORS.email)).setValue(email);
     await (await $(SELECTORS.password)).setValue(password);
     await (await $(SELECTORS.repeatPassword)).setValue(repeatPassword);
+    await this.hideKeyboard();
     await (await $(SELECTORS.signupButton)).click();
   }
 
